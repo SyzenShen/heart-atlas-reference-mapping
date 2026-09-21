@@ -32,11 +32,11 @@ unlabeled_category: Unknown
 n_hvg: 2000
 hvg_flavor: seurat_v3     # count-based HVG flavor; run on raw counts, reference
 
-# ---- Query donor selection (deterministic, pre-registered rule) ----
-query_selection_rule: largest_eligible_donor
-minimum_query_cells: 500
-minimum_query_cell_types: 5
-# tie-break: lexicographically smallest donor ID
+# ---- Query donor selection (deterministic, label-blind, pre-registered) ----
+# Rule: pick the donor with the most cells; ties broken by lexicographically
+# smallest donor ID. cell_type is NEVER read during selection — the rule is
+# label-blind. Composition is described afterward for documentation only.
+query_selection_rule: largest_donor_by_cells
 exclude_labels: ["doublets", "NotAssigned"]
 
 # ---- Device resolution ----

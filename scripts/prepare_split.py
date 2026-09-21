@@ -4,7 +4,7 @@
 Stages
 ------
 1. Load audited dataset and materialise the verified counts layer.
-2. Select the query donor with the pre-registered largest-eligible rule.
+2. Select the query donor with the label-blind `largest_donor_by_cells` rule.
 3. Save reference / sealed-query AnnData, sealed labels CSV and manifest.
 4. Select HVGs on the REFERENCE ONLY; save the gene list.
 5. Run leakage/sealing assertions (hard failure on any violation).

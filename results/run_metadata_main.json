@@ -9,10 +9,10 @@
     "cuda_available": false,
     "cuda_version": null,
     "git": {
-      "branch": null,
-      "commit": null,
-      "dirty": null,
-      "remote": null
+      "branch": "main",
+      "commit": "026469c9453411fe2cac3ef4a837e588cad7d508",
+      "dirty": true,
+      "remote": "https://github.com/SyzenShen/heart-atlas-reference-mapping.git"
     },
     "gpus": [],
     "lightning": "2.6.6",
@@ -64,10 +64,10 @@
       },
       "environment": {
         "git": {
-          "branch": null,
-          "commit": null,
-          "dirty": null,
-          "remote": null
+          "branch": "main",
+          "commit": "026469c9453411fe2cac3ef4a837e588cad7d508",
+          "dirty": true,
+          "remote": "https://github.com/SyzenShen/heart-atlas-reference-mapping.git"
         },
         "lightning": "2.6.6",
         "python": "3.10.11",

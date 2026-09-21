@@ -5,11 +5,11 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
-from heartmap.split import (make_split, select_query_donor,
-                            donor_statistics, load_split)
+from heartmap.split import (donor_cell_counts, donor_statistics,
+                            load_split, make_split, select_query_donor)
 
 
-def test_largest_eligible_donor_selected(synthetic_atlas, synthetic_config):
+def test_largest_donor_by_cells_selected(synthetic_atlas, synthetic_config):
     donor, stats = select_query_donor(synthetic_atlas, synthetic_config)
     # Fixture: A=240, B=240, C=200; tie between A/B -> lexicographic A.
     assert donor == "A"
@@ -24,10 +24,13 @@ def test_selection_is_deterministic(synthetic_atlas, synthetic_config):
     pd.testing.assert_frame_equal(s1, s2)
 
 
-def test_too_high_threshold_means_no_eligible(synthetic_atlas, synthetic_config):
-    synthetic_config.raw["minimum_query_cells"] = 10_000
-    with pytest.raises(RuntimeError):
-        select_query_donor(synthetic_atlas, synthetic_config)
+def test_donor_cell_counts_is_label_blind(synthetic_atlas, synthetic_config):
+    """donor_cell_counts must not read cell_type — only the donor key."""
+    counts = donor_cell_counts(synthetic_atlas, synthetic_config)
+    assert list(counts.columns) == ["donor_id", "n_cells"]
+    assert counts["n_cells"].sum() == synthetic_atlas.n_obs
+    # Largest first, tie-break by donor ID.
+    assert counts.iloc[0]["donor_id"] == "A"
 
 
 def test_make_split_isolates_donor_and_cells(synthetic_atlas, synthetic_config):
@@ -60,3 +63,9 @@ def test_statistics_table_columns(synthetic_atlas, synthetic_config):
     stats = donor_statistics(synthetic_atlas, synthetic_config)
     for col in ("donor_id", "n_cells", "n_cell_types"):
         assert col in stats.columns
+
+
+def test_manifest_records_label_blind_rule(synthetic_atlas, synthetic_config):
+    _, _, _, manifest, _, _ = make_split(synthetic_atlas, synthetic_config)
+    assert manifest["selection_rule"] == "largest_donor_by_cells"
+    assert manifest["selection_rule_detail"]["label_blind"] is True

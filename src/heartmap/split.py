@@ -1,8 +1,10 @@
 """Deterministic donor-held-out split and query-label sealing.
 
-The query donor is chosen by a pre-registered, deterministic rule
-(``largest_eligible_donor``). It is selected BEFORE any model exists and can
-never be swapped based on model performance.
+The query donor is chosen by a pre-registered, deterministic, label-blind
+rule (``largest_donor_by_cells``): the donor with the most cells wins, ties
+broken by lexicographically smallest donor ID. Selection never inspects
+``cell_type``. Composition statistics are computed *after* selection for
+description only.
 
 Sealing design
 --------------
@@ -11,6 +13,13 @@ Sealing design
 * The model-facing query AnnData has the author annotation column removed and
   ``labels_scanvi`` set to the single ``Unknown`` category for every cell.
 * The split manifest records stable hashes of both cell-id sets.
+
+Loader design
+-------------
+* ``load_model_split`` -- returns (reference, query, manifest) only; used by
+  every training/mapping/figure script.
+* ``load_split`` -- additionally reads the sealed CSV; used **only** by
+  ``scripts/evaluate.py`` and by tests that explicitly verify sealing.
 """
 
 from __future__ import annotations
@@ -27,11 +36,6 @@ from .config import Config
 from .provenance import (dataset_fingerprint, read_json, stable_hash_strings,
                          write_json)
 
-# A donor's "major" cell type: >= this fraction of its cells AND >= this many
-# cells. Every major type must also exist among the other donors.
-MAJOR_TYPE_MIN_FRACTION = 0.01
-MAJOR_TYPE_MIN_CELLS = 10
-
 SEALED_COLUMNS = ["cell_id", "true_cell_type"]
 PREDICTION_FREEZE_NOTE = (
     "Query labels were sealed before model training and are read only by "
@@ -40,9 +44,38 @@ PREDICTION_FREEZE_NOTE = (
 
 
 # --------------------------------------------------------------------------
-# Query donor selection
+# Query donor selection (label-blind)
 # --------------------------------------------------------------------------
+def donor_cell_counts(adata, cfg: Config) -> pd.DataFrame:
+    """Cell counts per donor. Uses only the donor key — no label column."""
+    donor_key = cfg["donor_key"]
+    exclude = set(cfg.get("exclude_labels", []))
+    label_key = cfg["cell_type_key"]
+
+    obs = adata.obs.copy()
+    obs = obs[obs[donor_key].notna()]
+    if exclude and label_key in obs.columns:
+        obs = obs[~obs[label_key].astype(str).isin(exclude)]
+
+    counts = (
+        obs.groupby(donor_key, observed=True)
+        .size()
+        .reset_index(name="n_cells")
+    )
+    counts["donor_id"] = counts[donor_key].astype(str)
+    counts = counts[["donor_id", "n_cells"]].sort_values(
+        ["n_cells", "donor_id"], ascending=[False, True]
+    ).reset_index(drop=True)
+    return counts
+
+
 def donor_statistics(adata, cfg: Config) -> pd.DataFrame:
+    """Full composition table for description (computed *after* selection).
+
+    Includes cell-type counts per donor. The selection rule itself never
+    touches the ``cell_type`` column — this table exists solely so the manifest
+    can document what the chosen donor looks like.
+    """
     donor_key = cfg["donor_key"]
     label_key = cfg["cell_type_key"]
     exclude = set(cfg.get("exclude_labels", []))
@@ -53,32 +86,16 @@ def donor_statistics(adata, cfg: Config) -> pd.DataFrame:
     df = df[df[donor_key].notna()]
 
     rows = []
-    donor_sets = {
-        d: set(g[label_key].unique())
-        for d, g in df.groupby(donor_key, observed=True)
-    }
     for donor, g in df.groupby(donor_key, observed=True):
         counts = g[label_key].value_counts()
         n_cells = int(len(g))
-        major = set(
-            counts[
-                (counts >= MAJOR_TYPE_MIN_CELLS)
-                & (counts / n_cells >= MAJOR_TYPE_MIN_FRACTION)
-            ].index
-        )
-        others_union: set[str] = set()
-        for other_d, types in donor_sets.items():
-            if other_d != donor:
-                others_union |= types
-        missing_in_reference = sorted(major - others_union)
         rows.append(
             {
                 "donor_id": str(donor),
                 "n_cells": n_cells,
                 "n_cell_types": int(g[label_key].nunique()),
-                "major_cell_types": ";".join(sorted(major)),
-                "major_types_missing_in_other_donors": ";".join(
-                    missing_in_reference
+                "cell_type_composition": ";".join(
+                    f"{t}:{c}" for t, c in counts.items()
                 ),
             }
         )
@@ -89,28 +106,21 @@ def donor_statistics(adata, cfg: Config) -> pd.DataFrame:
 
 
 def select_query_donor(adata, cfg: Config) -> tuple[str, pd.DataFrame]:
-    """Apply the deterministic eligibility rule and return (donor, table)."""
-    stats = donor_statistics(adata, cfg)
-    min_cells = int(cfg["minimum_query_cells"])
-    min_types = int(cfg["minimum_query_cell_types"])
+    """Label-blind rule: largest cell count, tie-break by donor ID.
 
-    stats["eligible"] = (
-        (stats["n_cells"] >= min_cells)
-        & (stats["n_cell_types"] >= min_types)
-        & (stats["major_types_missing_in_other_donors"] == "")
-    )
-    eligible = stats[stats["eligible"]]
-    if eligible.empty:
+    Returns ``(donor_id, composition_stats)``. Composition stats are computed
+    for description only and are **not** used by the selection.
+    """
+    counts = donor_cell_counts(adata, cfg)
+    if counts.empty:
         raise RuntimeError(
-            "No donor satisfies the eligibility rule. The rule may only be "
-            "relaxed by editing the config thresholds before any model run, "
-            "never by inspecting model performance."
+            "No donor cells found; cannot select a query donor."
         )
-    # Rule: largest; ties broken by lexicographically smallest donor ID.
-    top = eligible.sort_values(
-        ["n_cells", "donor_id"], ascending=[False, True]
-    ).iloc[0]
-    return str(top["donor_id"]), stats
+    top = counts.iloc[0]
+    donor = str(top["donor_id"])
+    # Composition computed after selection — never feeds back into the choice.
+    stats = donor_statistics(adata, cfg)
+    return donor, stats
 
 
 # --------------------------------------------------------------------------
@@ -225,11 +235,13 @@ def make_split(adata, cfg: Config, audit_info: dict[str, Any] | None = None):
         "seed": int(cfg["seed"]),
         "selection_rule": cfg["query_selection_rule"],
         "selection_rule_detail": {
-            "minimum_query_cells": int(cfg["minimum_query_cells"]),
-            "minimum_query_cell_types": int(cfg["minimum_query_cell_types"]),
-            "major_type_min_fraction": MAJOR_TYPE_MIN_FRACTION,
-            "major_type_min_cells": MAJOR_TYPE_MIN_CELLS,
+            "criterion": "largest cell count",
             "tie_break": "lexicographically smallest donor ID",
+            "label_blind": True,
+            "note": (
+                "Selection uses only the donor_key column; cell_type is never "
+                "read during selection. Composition is described afterward."
+            ),
         },
         "reference_donor_ids": sorted(
             reference.obs[donor_key].astype(str).unique().tolist()
@@ -248,8 +260,25 @@ def make_split(adata, cfg: Config, audit_info: dict[str, Any] | None = None):
     return reference, query_model, sealed, manifest, stats, reference_full
 
 
+def load_model_split(cfg: Config):
+    """Read the model-facing split: reference, query, manifest.
+
+    This function is the ONLY split loader used by training, mapping, and
+    figure scripts. It deliberately does NOT touch the sealed labels file.
+    """
+    reference = ad.read_h5ad(cfg.reference_path)
+    query = ad.read_h5ad(cfg.query_model_input_path)
+    manifest = read_json(cfg.split_manifest_path)
+    return reference, query, manifest
+
+
 def load_split(cfg: Config):
-    """Read a previously frozen split from disk."""
+    """Read a frozen split **including sealed labels**.
+
+    Reserved for ``scripts/evaluate.py`` and for tests that explicitly verify
+    sealing. Training/mapping/figure scripts must use ``load_model_split``
+    instead.
+    """
     reference = ad.read_h5ad(cfg.reference_path)
     query = ad.read_h5ad(cfg.query_model_input_path)
     sealed = pd.read_csv(cfg.sealed_labels_path)

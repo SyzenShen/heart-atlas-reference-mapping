@@ -27,20 +27,20 @@ removed from query inputs.
 One complete donor is the query; every other donor is the reference. No
 cell-level random split is ever performed.
 
-The query donor is fixed by a pre-registered deterministic rule
-(`largest_eligible_donor`):
+The query donor is fixed by a pre-registered, **label-blind** deterministic
+rule (`largest_donor_by_cells`):
 
-1. cells must have a donor ID and a non-nuisance label;
-2. a donor is eligible with ≥ 500 cells, ≥ 5 broad cell types, and each of its
-   major types (≥ 10 cells, ≥ 1% of the donor) represented among the other
-   donors;
-3. choose the eligible donor with the most cells; ties resolve to the
-   lexicographically smallest donor ID.
+1. cells must have a donor ID;
+2. choose the donor with the most cells; ties resolve to the lexicographically
+   smallest donor ID.
 
-All 14 donors were eligible; **D6** (3,009 cells, all 11 types) is the query.
-The reference comprises the other 13 donors (15,632 cells). The split,
-SHA-256 hashes of reference/query cell IDs, keys, seed and software versions
-are stored in `data/splits/split_manifest_main.json`.
+The `cell_type` column is **never read** during selection — the rule is
+label-blind. Cell-type composition is computed *after* selection for
+description only (see `results/query_selection.csv`). **D6** (3,009 cells,
+all 11 types) is the query. The reference comprises the other 13 donors
+(15,632 cells). The split, SHA-256 hashes of reference/query cell IDs, keys,
+seed and software versions are stored in
+`data/splits/split_manifest_main.json`.
 
 ## 3. Label sealing
 

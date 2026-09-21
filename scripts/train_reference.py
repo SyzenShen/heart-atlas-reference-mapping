@@ -29,7 +29,7 @@ from heartmap.models import (METHOD_NAME, save_history, subset_hvg,
                              train_scanvi_reference, train_scvi_reference)  # noqa: E402
 from heartmap.provenance import collect_environment, read_json, write_json  # noqa: E402
 from heartmap.split import (LeakageError, assert_no_overlap, assert_query_sealed,
-                            load_split)  # noqa: E402
+                            load_model_split)  # noqa: E402
 
 
 def main() -> None:
@@ -38,7 +38,7 @@ def main() -> None:
     args = parser.parse_args()
     cfg = load_config(args.config)
 
-    reference, query, _, manifest = load_split(cfg)
+    reference, query, manifest = load_model_split(cfg)
     try:
         assert_no_overlap(reference, query, cfg["donor_key"])
         assert_query_sealed(query, cfg)

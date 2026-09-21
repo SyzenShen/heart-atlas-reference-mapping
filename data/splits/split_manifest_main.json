@@ -48,13 +48,12 @@
   "run_tag": "main",
   "sealed_labels_file": "query_eval_labels_main.csv",
   "seed": 42,
-  "selection_rule": "largest_eligible_donor",
+  "selection_rule": "largest_donor_by_cells",
   "selection_rule_detail": {
-    "major_type_min_cells": 10,
-    "major_type_min_fraction": 0.01,
-    "minimum_query_cell_types": 5,
-    "minimum_query_cells": 500,
-    "tie_break": "lexicographically smallest donor ID"
+    "criterion": "largest cell count",
+    "tie_break": "lexicographically smallest donor ID",
+    "label_blind": true,
+    "note": "Selection uses only the donor_key column; cell_type is never read during selection. Composition is described afterward."
   },
   "unlabeled_category": "Unknown"
 }

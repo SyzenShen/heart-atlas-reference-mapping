@@ -26,9 +26,7 @@ unlabeled_category: Unknown
 n_hvg: 200
 hvg_flavor: seurat_v3
 
-query_selection_rule: largest_eligible_donor
-minimum_query_cells: 50
-minimum_query_cell_types: 3
+query_selection_rule: largest_donor_by_cells
 exclude_labels: ["doublets", "NotAssigned"]
 
 # Keep the smoke split tiny but stratified by cell type.

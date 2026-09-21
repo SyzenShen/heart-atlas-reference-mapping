@@ -24,7 +24,7 @@ PROJECT_CONFIGS = [
 def test_shipped_configs_validate():
     for p in PROJECT_CONFIGS:
         cfg = load_config(p)
-        assert cfg["query_selection_rule"] == "largest_eligible_donor"
+        assert cfg["query_selection_rule"] == "largest_donor_by_cells"
 
 
 def test_config_rejects_bad_threshold(tmp_path):

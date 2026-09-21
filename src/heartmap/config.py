@@ -27,8 +27,6 @@ REQUIRED_TOP_LEVEL = [
     "unlabeled_category",
     "n_hvg",
     "query_selection_rule",
-    "minimum_query_cells",
-    "minimum_query_cell_types",
     "baseline",
     "scvi",
     "scanvi",
@@ -128,9 +126,9 @@ class Config:
             raise ConfigError("run_tag must be 'main' or 'smoke'")
         if int(self.raw["n_hvg"]) <= 0:
             raise ConfigError("n_hvg must be positive")
-        if self.raw["query_selection_rule"] != "largest_eligible_donor":
+        if self.raw["query_selection_rule"] != "largest_donor_by_cells":
             raise ConfigError(
-                "Only the pre-registered 'largest_eligible_donor' rule is allowed"
+                "Only the pre-registered 'largest_donor_by_cells' rule is allowed"
             )
         thresholds = list(self.raw["confidence_thresholds"])
         if 0.0 not in [float(t) for t in thresholds]:

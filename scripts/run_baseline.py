@@ -17,7 +17,7 @@ from heartmap.baseline import prediction_columns, run_baseline  # noqa: E402
 from heartmap.config import load_config  # noqa: E402
 from heartmap.provenance import collect_environment, write_json  # noqa: E402
 from heartmap.split import (assert_no_overlap, assert_query_sealed,
-                            load_split)  # noqa: E402
+                            load_model_split)  # noqa: E402
 
 
 def main() -> None:
@@ -26,7 +26,7 @@ def main() -> None:
     args = parser.parse_args()
     cfg = load_config(args.config)
 
-    reference, query, _, manifest = load_split(cfg)
+    reference, query, manifest = load_model_split(cfg)
     assert_no_overlap(reference, query, cfg["donor_key"])
     assert_query_sealed(query, cfg)
 

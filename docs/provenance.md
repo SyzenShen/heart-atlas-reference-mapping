@@ -43,21 +43,19 @@ a fine-grained label leak.
   `layer="counts"` to `SCVI.setup_anndata`.
 - See `results/data_audit.json` and `docs/DATA_DICTIONARY.md`.
 
-## Query-donor selection (pre-registered, deterministic)
+## Query-donor selection (pre-registered, deterministic, label-blind)
 
-Rule name: `largest_eligible_donor` (see `results/query_selection.csv`).
+Rule name: `largest_donor_by_cells` (see `results/query_selection.csv`).
 
-1. Drop cells without a donor ID and doublet/unassigned/nuisance labels
-   (already removed by the loader).
-2. A donor is eligible if it has ≥ 500 cells, ≥ 5 broad cell types, and every
-   "major" type in it (≥ 10 cells and ≥ 1% of the donor) is present in the
-   remaining donors.
-3. Pick the eligible donor with the largest cell count.
-4. Tie-break: lexicographically smallest donor ID.
+1. Drop cells without a donor ID.
+2. Pick the donor with the largest cell count.
+3. Tie-break: lexicographically smallest donor ID.
 
-All 14 donors were eligible. **D6** is the largest (3,009 cells, 11 cell
-types) and was therefore fixed as the single query donor before any model was
-trained. Reference = the other 13 donors, **15,632 cells**.
+The `cell_type` column is **never read** during selection — the rule is
+label-blind. Cell-type composition is computed *after* selection for
+description only. **D6** is the largest donor (3,009 cells, 11 cell types) and
+was therefore fixed as the single query donor before any model was trained.
+Reference = the other 13 donors, **15,632 cells**.
 
 ## Software versions
 

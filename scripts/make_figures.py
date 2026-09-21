@@ -25,7 +25,7 @@ from heartmap.plotting import (joint_umap, plot_confidence_by_cell_type,
                                plot_coverage, plot_f1_vs_abundance,
                                plot_method_comparison, plot_umap_scatter)  # noqa: E402
 from heartmap.provenance import sha256_file, write_json  # noqa: E402
-from heartmap.split import load_split  # noqa: E402
+from heartmap.split import load_model_split  # noqa: E402
 
 
 def _fig_dir(cfg) -> Path:
@@ -58,7 +58,7 @@ def build_raw_pca_umap(cfg) -> ad.AnnData:
     """Reference-fitted PCA on normalized HVGs (visualisation only)."""
     from sklearn.decomposition import PCA
 
-    reference, query, _, _ = load_split(cfg)
+    reference, query, _ = load_model_split(cfg)
     hvgs = load_hvgs(cfg)
     target_sum = float(cfg["baseline"].get("target_sum", 1e4))
     x_ref, ref_obs = _normalized_matrix(

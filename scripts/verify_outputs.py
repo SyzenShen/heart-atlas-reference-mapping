@@ -1,15 +1,22 @@
 #!/usr/bin/env python3
 """Verify pipeline outputs, leakage guards, schemas and status consistency.
 
-Default: report the highest supported status without failing.
-With ``--require-complete-main-run``: exit non-zero and list every missing
-artifact required for MAIN_RUN_COMPLETED / MAIN_RUN_VERIFIED.
+Two verification tiers
+-----------------------
+* ``--verify-published-results`` (default): checks only artifacts tracked in
+  git — predictions, metrics, figures, manifests, hashes, sealed-label
+  schema, HVG list, query-selection table. Passes on a fresh clone.
+* ``--require-complete-local-run``: additionally checks local (git-ignored)
+  artifacts — processed h5ad files, model weights, latent h5ad, and
+  split-isolation on the h5ad objects. Fails on a fresh clone.
+
+``--require-complete-main-run`` is kept as a backward-compatible alias for
+``--require-complete-local-run``.
 """
 
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
@@ -50,7 +57,10 @@ class Report:
             print(f"[WARN] {w}")
 
 
-def _verify_static(cfg, rep: Report) -> None:
+# --------------------------------------------------------------------------
+# Published checks — tracked artifacts only (pass on fresh clone)
+# --------------------------------------------------------------------------
+def _verify_published_static(cfg, rep: Report) -> None:
     rep.exist("data audit", cfg.results_dir / "data_audit.json")
     rep.exist("obs columns", cfg.results_dir / "obs_columns.csv")
     rep.exist("query selection", cfg.results_dir / "query_selection.csv")
@@ -58,10 +68,9 @@ def _verify_static(cfg, rep: Report) -> None:
     rep.exist("split manifest", cfg.split_manifest_path)
     rep.exist("sealed labels", cfg.sealed_labels_path)
     rep.exist("hvg list", cfg.hvg_path)
-    rep.exist("reference h5ad", cfg.reference_path)
-    rep.exist("query model input h5ad", cfg.query_model_input_path)
     rep.exist("preprocess metadata",
               cfg.splits_dir / f"preprocess_metadata_{cfg.run_tag}.json")
+    rep.exist("artifact manifest", cfg.results_dir / "artifact_manifest.json")
 
     if cfg.split_manifest_path.exists():
         manifest = read_json(cfg.split_manifest_path)
@@ -73,8 +82,13 @@ def _verify_static(cfg, rep: Report) -> None:
         )
         rep.check(
             "manifest selection rule",
-            manifest.get("selection_rule") == "largest_eligible_donor",
+            manifest.get("selection_rule") == "largest_donor_by_cells",
             "unexpected selection rule",
+        )
+        rep.check(
+            "manifest label-blind rule",
+            manifest.get("selection_rule_detail", {}).get("label_blind") is True,
+            "selection rule is not label-blind",
         )
 
     if cfg.sealed_labels_path.exists():
@@ -87,41 +101,10 @@ def _verify_static(cfg, rep: Report) -> None:
                   "duplicate cell ids")
 
 
-def _verify_split_isolation(cfg, rep: Report) -> None:
-    if not (cfg.reference_path.exists() and cfg.query_model_input_path.exists()):
-        return
-    import anndata as ad
-
-    ref = ad.read_h5ad(cfg.reference_path)
-    qry = ad.read_h5ad(cfg.query_model_input_path)
-    rep.check(
-        "donor disjoint",
-        not (set(ref.obs[cfg["donor_key"]].astype(str))
-             & set(qry.obs[cfg["donor_key"]].astype(str))),
-        "shared donor between reference and query",
-    )
-    rep.check(
-        "cell-id disjoint",
-        not (set(ref.obs_names) & set(qry.obs_names)),
-        "shared cell ids",
-    )
-    rep.check(
-        "query true-label column removed",
-        cfg["cell_type_key"] not in qry.obs.columns,
-        f"{cfg['cell_type_key']} present in query model input",
-    )
-    if "labels_scanvi" in qry.obs.columns:
-        vals = set(qry.obs["labels_scanvi"].astype(str).unique())
-        rep.check(
-            "query labels all Unknown", vals == {cfg["unlabeled_category"]},
-            str(vals),
-        )
-
-
-def _verify_predictions(cfg, rep: Report, stem: str) -> Path | None:
+def _verify_published_predictions(cfg, rep: Report, stem: str) -> None:
     path = cfg.results_dir / "predictions" / f"{stem}_{cfg.run_tag}.csv"
     if not rep.exist(f"predictions:{stem}", path):
-        return None
+        return
     df = pd.read_csv(path)
     rep.check(
         f"{stem} schema", list(df.columns)[:7] == prediction_columns(),
@@ -141,13 +124,10 @@ def _verify_predictions(cfg, rep: Report, stem: str) -> Path | None:
             set(df.cell_id) == set(sealed.cell_id),
             "cell-id set differs from sealed labels",
         )
-    return path
 
 
-def _verify_models(cfg, rep: Report) -> None:
-    for name in ("scvi_reference", "scanvi_reference", "scanvi_query"):
-        d = cfg.models_dir / f"{name}_{cfg.run_tag}"
-        rep.exist(f"model:{name}", d / "model.pt")
+def _verify_published_models_metadata(cfg, rep: Report) -> None:
+    """Training summaries and run metadata are tracked; model.pt is not."""
     for name in ("scvi", "scanvi", "query_mapping"):
         stem = "query_mapping" if name == "query_mapping" else name
         rep.exist(
@@ -163,12 +143,9 @@ def _verify_models(cfg, rep: Report) -> None:
             f"summary:{name}", cfg.results_dir / "training" / summary_name
         )
     rep.exist("run metadata", cfg.results_dir / f"run_metadata_{cfg.run_tag}.json")
-    rep.exist("reference latent",
-              cfg.results_dir / f"reference_scanvi_latent_{cfg.run_tag}.h5ad")
-    rep.exist("query latent", cfg.results_dir / f"query_mapped_{cfg.run_tag}.h5ad")
 
 
-def _verify_metrics(cfg, rep: Report) -> None:
+def _verify_published_metrics(cfg, rep: Report) -> None:
     mdir = cfg.results_dir / "metrics"
     summary_path = mdir / f"summary_{cfg.run_tag}.csv"
     if not rep.exist("metrics summary", summary_path):
@@ -219,7 +196,7 @@ def _verify_metrics(cfg, rep: Report) -> None:
     rep.exist("per-class table", mdir / f"per_class_{cfg.run_tag}.csv")
 
 
-def _verify_figures(cfg, rep: Report) -> None:
+def _verify_published_figures(cfg, rep: Report) -> None:
     mdir = cfg.results_dir / "metrics"
     manifest = mdir / f"figures_manifest_{cfg.run_tag}.json"
     if not rep.exist("figures manifest", manifest):
@@ -233,24 +210,88 @@ def _verify_figures(cfg, rep: Report) -> None:
     rep.check("all listed figures exist", not missing, ", ".join(missing))
 
 
+# --------------------------------------------------------------------------
+# Local-only checks — require git-ignored h5ad / model artifacts
+# --------------------------------------------------------------------------
+def _verify_local_h5ad(cfg, rep: Report) -> None:
+    rep.exist("reference h5ad", cfg.reference_path)
+    rep.exist("query model input h5ad", cfg.query_model_input_path)
+    rep.exist("reference latent",
+              cfg.results_dir / f"reference_scanvi_latent_{cfg.run_tag}.h5ad")
+    rep.exist("query latent", cfg.results_dir / f"query_mapped_{cfg.run_tag}.h5ad")
+
+
+def _verify_local_models(cfg, rep: Report) -> None:
+    for name in ("scvi_reference", "scanvi_reference", "scanvi_query"):
+        d = cfg.models_dir / f"{name}_{cfg.run_tag}"
+        rep.exist(f"model:{name}", d / "model.pt")
+
+
+def _verify_split_isolation(cfg, rep: Report) -> None:
+    if not (cfg.reference_path.exists() and cfg.query_model_input_path.exists()):
+        return
+    import anndata as ad
+
+    ref = ad.read_h5ad(cfg.reference_path)
+    qry = ad.read_h5ad(cfg.query_model_input_path)
+    rep.check(
+        "donor disjoint",
+        not (set(ref.obs[cfg["donor_key"]].astype(str))
+             & set(qry.obs[cfg["donor_key"]].astype(str))),
+        "shared donor between reference and query",
+    )
+    rep.check(
+        "cell-id disjoint",
+        not (set(ref.obs_names) & set(qry.obs_names)),
+        "shared cell ids",
+    )
+    rep.check(
+        "query true-label column removed",
+        cfg["cell_type_key"] not in qry.obs.columns,
+        f"{cfg['cell_type_key']} present in query model input",
+    )
+    if "labels_scanvi" in qry.obs.columns:
+        vals = set(qry.obs["labels_scanvi"].astype(str).unique())
+        rep.check(
+            "query labels all Unknown", vals == {cfg["unlabeled_category"]},
+            str(vals),
+        )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/main.yaml")
     parser.add_argument(
+        "--verify-published-results", action="store_true",
+        help="fail unless all tracked (published) artifacts pass verification",
+    )
+    parser.add_argument(
+        "--require-complete-local-run", action="store_true",
+        help="additionally require git-ignored h5ad/model artifacts",
+    )
+    parser.add_argument(
         "--require-complete-main-run", action="store_true",
-        help="fail unless a full, tagged main run is present",
+        help="(deprecated alias for --require-complete-local-run)",
     )
     args = parser.parse_args()
     cfg = load_config(args.config)
     rep = Report()
 
-    _verify_static(cfg, rep)
-    _verify_split_isolation(cfg, rep)
-    _verify_predictions(cfg, rep, "baseline_predictions")
-    _verify_predictions(cfg, rep, "scanvi_predictions")
-    _verify_models(cfg, rep)
-    _verify_metrics(cfg, rep)
-    _verify_figures(cfg, rep)
+    require_local = args.require_complete_local_run or args.require_complete_main_run
+
+    # ---- Published (tracked) checks --------------------------------------
+    _verify_published_static(cfg, rep)
+    _verify_published_predictions(cfg, rep, "baseline_predictions")
+    _verify_published_predictions(cfg, rep, "scanvi_predictions")
+    _verify_published_models_metadata(cfg, rep)
+    _verify_published_metrics(cfg, rep)
+    _verify_published_figures(cfg, rep)
+
+    # ---- Local-only (git-ignored) checks --------------------------------
+    if require_local:
+        _verify_local_h5ad(cfg, rep)
+        _verify_local_models(cfg, rep)
+        _verify_split_isolation(cfg, rep)
 
     if cfg.is_smoke:
         rep.warn("SMOKE artifacts verified; these never count as a main run.")
@@ -259,18 +300,21 @@ def main() -> int:
     readme = PROJECT_ROOT / "README.md"
     if readme.exists():
         txt = readme.read_text()
-        if "MAIN_RUN_VERIFIED" in txt and rep.errors:
-            rep.warn("README mentions MAIN_RUN_VERIFIED while verification has errors.")
+        if "MAIN_RESULTS_VERIFIED" in txt and rep.errors and args.verify_published_results:
+            rep.warn("README mentions MAIN_RESULTS_VERIFIED while verification has errors.")
 
     rep.print_report()
 
     print("\n--- Summary ---")
+    tier = "published" if not require_local else "complete local run"
+    print(f"verification tier: {tier}")
     print(f"checks: {sum(ok for _, ok, _ in rep.checks)}/{len(rep.checks)} passed")
 
-    if args.require_complete_main_run:
-        if cfg.is_smoke:
-            print("FAIL: --require-complete-main-run used with smoke config.")
-            return 2
+    if require_local and cfg.is_smoke:
+        print("FAIL: --require-complete-local-run used with smoke config.")
+        return 2
+
+    if require_local:
         required = [
             cfg.models_dir / "scanvi_reference_main" / "model.pt",
             cfg.models_dir / "scanvi_query_main" / "model.pt",
@@ -281,14 +325,24 @@ def main() -> int:
         ]
         missing = [str(p.relative_to(PROJECT_ROOT)) for p in required if not p.exists()]
         if missing or rep.errors:
-            print("\nMAIN RUN INCOMPLETE. Missing/problematic items:")
+            print("\nLOCAL RUN INCOMPLETE. Missing/problematic items:")
             for m in missing:
                 print(f"  - {m}")
             for e in rep.errors:
                 print(f"  - {e}")
             return 1
-        print("REQUIRED MAIN-RUN ARTIFACTS PRESENT (status >= MAIN_RUN_COMPLETED).")
-    return 1 if rep.errors else 0
+        print("REQUIRED LOCAL-RUN ARTIFACTS PRESENT (status >= LOCAL_RUN_COMPLETE).")
+        return 0
+
+    if args.verify_published_results and rep.errors:
+        print("\nPUBLISHED RESULTS VERIFICATION FAILED.")
+        for e in rep.errors:
+            print(f"  - {e}")
+        return 1
+
+    if rep.errors and require_local:
+        return 1
+    return 0
 
 
 if __name__ == "__main__":

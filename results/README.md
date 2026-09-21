@@ -8,8 +8,8 @@ two are never mixed (`verify_outputs.py` enforces this).
 
 - `environment.json`, `data_audit.json` — environment and AnnData audits.
 - `obs_columns.csv`, `donor_cell_counts.csv`, `donor_celltype_crosstab.csv`.
-- `query_selection.csv` — donor ranking with eligibility under the
-  pre-registered rule.
+- `query_selection.csv` — donor ranking (label-blind `largest_donor_by_cells`
+  rule; composition described for documentation only).
 - `run_metadata_<tag>.json` — per-run provenance (versions, device, seed,
   timestamps, git info).
 - `reference_scanvi_latent_<tag>.h5ad`, `query_mapped_<tag>.h5ad` — latent

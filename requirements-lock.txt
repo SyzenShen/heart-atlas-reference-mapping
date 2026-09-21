@@ -43,7 +43,7 @@ grpcio==1.84.0
 h11==0.16.0
 h5py==3.16.0
 # Editable install with no version control (heartmap==0.1.0)
--e /Users/shenyz/projects/github/heart-atlas-reference-mapping
+-e .
 httpcore==1.0.9
 httpx==0.28.1
 humanize==4.16.0
