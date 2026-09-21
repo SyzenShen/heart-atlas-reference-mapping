@@ -20,7 +20,8 @@ confidence–coverage analysis accompany the deep models.
 Using the 20k-cell subsampled Human Heart Cell Atlas shipped with
 scvi-tools (18,641 quality-controlled cells, 14 donors), donor **D6**
 (3,009 cells, all 11 broad cell types) was fixed as the query by a
-pre-registered, deterministic rule before any training. The remaining 13
+deterministic, label-blind rule (largest cell count) before any training.
+The remaining 13
 donors (15,632 cells) formed the reference. Labels were sealed, 2,000 HVGs
 and every learned transform were fit on reference cells only, and scANVI
 predictions were compared with a PCA+kNN baseline using accuracy, balanced
@@ -86,7 +87,9 @@ Donor/cell-ID disjointness, sealed labels, reference-only HVG/PCA/kNN
 fitting, raw-count input validation, label-blind donor selection, and static
 enforcement that training scripts can neither import evaluation code nor read
 the sealed file (training scripts use `load_model_split`, which never touches
-the sealed CSV; only `evaluate.py` uses `load_split`). Full list:
+the sealed CSV; only the evaluation-side scripts — `evaluate.py` and
+`verify_outputs.py`, which recompute metrics after predictions are frozen —
+open the sealed labels via `load_evaluation_labels`). Full list:
 [`docs/LEAKAGE_CHECKLIST.md`](docs/LEAKAGE_CHECKLIST.md). Tests assert all of
 this; `scripts/verify_outputs.py` re-checks artifacts on disk.
 
@@ -269,9 +272,12 @@ verification and package a downloadable zip. Step-by-step guidance
 Fixed seed (42), deterministic label-blind query rule, YAML-driven
 parameters, SHA-256 hashes of reference/query cell IDs, per-run metadata
 with package versions, device, epochs completed, early-stop status and
-timings, and a tracked artifact manifest (`results/artifact_manifest.json`)
-recording SHA-256 of config, HVG list, prediction CSVs, sealed labels, and
-git commit:
+timings, and a tracked artifact manifest
+(`results/artifact_manifest_main.json`) recording SHA-256 of the config, HVG
+list, split manifest, sealed labels, prediction/score CSVs, metrics, training
+histories/summaries and figure manifest, plus a verification-snapshot git
+commit (generation-time git fields stay null — git was initialised after the
+run):
 [`docs/provenance.md`](docs/provenance.md). Large h5ad/model artifacts are
 git-ignored; committed artifacts are code, configs, tests, docs, manifests,
 small CSVs and figures.

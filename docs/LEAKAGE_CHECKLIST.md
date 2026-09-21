@@ -27,15 +27,18 @@ These controls are implemented in `src/heartmap/split.py`, enforced by
 
 ## Process isolation
 
-- [x] Only `scripts/evaluate.py` (and the evaluation notebook cell) opens the
-      sealed label file. Training/mapping/figure scripts use
+- [x] Only the evaluation-side scripts — `scripts/evaluate.py` and
+      `scripts/verify_outputs.py` (which recompute metrics from the sealed
+      labels after predictions are frozen) — open the sealed label file
+      via `load_evaluation_labels`. Training/mapping/figure scripts use
       `load_model_split`, which never reads the sealed CSV; a monkeypatch
       test asserts `pd.read_csv(sealed_path)` is never called.
 - [x] Static test greps training scripts
       (`run_baseline.py`, `train_reference.py`, `map_query.py`) for
       sealed-file references, `true_cell_type`, `load_split`, and evaluation
-      imports — including an AST import check. An additional AST test
-      verifies every training script imports `load_model_split`.
+      imports — including an AST import check. A further AST test verifies
+      every training script imports `load_model_split`, and that only the
+      evaluation-side scripts import the sealed-label loaders.
 - [x] Hyperparameters are fixed in YAML before evaluation; no threshold or
       epoch is selected using query accuracy.
 - [x] Only one query donor exists; there is no "try several donors and keep

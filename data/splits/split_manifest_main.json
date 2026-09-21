@@ -53,7 +53,8 @@
     "criterion": "largest cell count",
     "tie_break": "lexicographically smallest donor ID",
     "label_blind": true,
-    "note": "Selection uses only the donor_key column; cell_type is never read during selection. Composition is described afterward."
+    "note": "Selection uses only the donor_key column; cell_type is never read during selection. Composition is described afterward.",
+    "rule_revision_note": "Simplified from the earlier 'largest_eligible_donor' draft after repository review; the revision did not change the selected donor, the split cell-ID sets, or their hashes."
   },
   "unlabeled_category": "Unknown"
 }

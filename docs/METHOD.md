@@ -27,8 +27,8 @@ removed from query inputs.
 One complete donor is the query; every other donor is the reference. No
 cell-level random split is ever performed.
 
-The query donor is fixed by a pre-registered, **label-blind** deterministic
-rule (`largest_donor_by_cells`):
+The query donor is fixed by a deterministic, **label-blind** rule
+(`largest_donor_by_cells`):
 
 1. cells must have a donor ID;
 2. choose the donor with the most cells; ties resolve to the lexicographically
@@ -41,6 +41,12 @@ all 11 types) is the query. The reference comprises the other 13 donors
 (15,632 cells). The split, SHA-256 hashes of reference/query cell IDs, keys,
 seed and software versions are stored in
 `data/splits/split_manifest_main.json`.
+
+> Revision note: the rule was originally specified as `largest_eligible_donor`
+> (cell count + composition eligibility thresholds) and was simplified to the
+> label-blind cell-count rule after repository review. The revision did not
+> change the selected donor (D6), the reference/query cell-ID sets, or their
+> SHA-256 hashes.
 
 ## 3. Label sealing
 

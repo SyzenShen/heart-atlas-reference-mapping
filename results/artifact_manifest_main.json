@@ -1,0 +1,138 @@
+{
+  "artifacts": {
+    "baseline_predictions": {
+      "path": "results/predictions/baseline_predictions_main.csv",
+      "sha256": "fbfdcd311f5e1a70938446ae02daffc49d144b746fea6a29d747e68da53021f2"
+    },
+    "baseline_summary": {
+      "path": "results/training/baseline_summary_main.json",
+      "sha256": "a104614a7f2a8e1edc83cf425c6a9cd66250cdc84999e6a668cbb7787fa43b40"
+    },
+    "config": {
+      "path": "configs/main.yaml",
+      "sha256": "0845ec5e8650c4e5b3e85e4bd683fe635f559a055f18e9863bde59804ec0bcf2"
+    },
+    "confusion_pca_knn_all_counts": {
+      "path": "results/metrics/confusion_pca_knn_all_counts_main.csv",
+      "sha256": "2d945ec079817d402955a33d3d81a07cc6a891b9e92e19573d40590f335612c0"
+    },
+    "confusion_pca_knn_all_normalized": {
+      "path": "results/metrics/confusion_pca_knn_all_normalized_main.csv",
+      "sha256": "9586e9361b2270b30ea5f12239979c39b20eb210cea195a2e4dc199764b89e70"
+    },
+    "confusion_pca_knn_closed_set_counts": {
+      "path": "results/metrics/confusion_pca_knn_closed_set_counts_main.csv",
+      "sha256": "2d945ec079817d402955a33d3d81a07cc6a891b9e92e19573d40590f335612c0"
+    },
+    "confusion_pca_knn_closed_set_normalized": {
+      "path": "results/metrics/confusion_pca_knn_closed_set_normalized_main.csv",
+      "sha256": "9586e9361b2270b30ea5f12239979c39b20eb210cea195a2e4dc199764b89e70"
+    },
+    "confusion_scanvi_scarches_all_counts": {
+      "path": "results/metrics/confusion_scanvi_scarches_all_counts_main.csv",
+      "sha256": "13294d3ca954857ec7b9c300dc1fb04e1d7c7d615b4e2c6ed38290c1b229f57a"
+    },
+    "confusion_scanvi_scarches_all_normalized": {
+      "path": "results/metrics/confusion_scanvi_scarches_all_normalized_main.csv",
+      "sha256": "2c3a8d05aacf9333dd14932e13f6d694140e67b23ca52f216afcfa5ae1d4b208"
+    },
+    "confusion_scanvi_scarches_closed_set_counts": {
+      "path": "results/metrics/confusion_scanvi_scarches_closed_set_counts_main.csv",
+      "sha256": "13294d3ca954857ec7b9c300dc1fb04e1d7c7d615b4e2c6ed38290c1b229f57a"
+    },
+    "confusion_scanvi_scarches_closed_set_normalized": {
+      "path": "results/metrics/confusion_scanvi_scarches_closed_set_normalized_main.csv",
+      "sha256": "2c3a8d05aacf9333dd14932e13f6d694140e67b23ca52f216afcfa5ae1d4b208"
+    },
+    "evaluation_metadata": {
+      "path": "results/metrics/evaluation_metadata_main.json",
+      "sha256": "6539446306200a1a698eaeeffa24c2af15d00148f237e0cf30e0878eea3603f5"
+    },
+    "figures_manifest": {
+      "path": "results/metrics/figures_manifest_main.json",
+      "sha256": "b60f5a7b415e44f75082e52a6e9846063a229b804b4a1fcdc1f5108acdda75be"
+    },
+    "hvg_list": {
+      "path": "data/processed/hvg_main.txt",
+      "sha256": "e88f8f4713263d80c3b37ceda6415041e577cf10665d235f5b96dafeb1c7699d"
+    },
+    "joined_eval_pca_knn": {
+      "path": "results/predictions/joined_eval_pca_knn_main.csv",
+      "sha256": "fd7f44aae66d376b2f00d6fe762bb0e0d24fbe379876ff1e0c6c1bec356d0d8b"
+    },
+    "joined_eval_scanvi_scarches": {
+      "path": "results/predictions/joined_eval_scanvi_scarches_main.csv",
+      "sha256": "0a266d7caf24291d2a6b86cbc24edfe4c1873ca01503de545df7408fa11297df"
+    },
+    "metrics_confidence_coverage": {
+      "path": "results/metrics/confidence_coverage_main.csv",
+      "sha256": "232f92e002b21b89c948fa7e8087297b09604dbd3c17f4c6667d7e2b28aaffb5"
+    },
+    "metrics_per_class": {
+      "path": "results/metrics/per_class_main.csv",
+      "sha256": "01ab479c7c60759552ce0c4d1e3cc7e91fab0ba7c8bea1c740a529077011b881"
+    },
+    "metrics_rejected_composition": {
+      "path": "results/metrics/rejected_composition_main.csv",
+      "sha256": "1d63e92ed35c1b03eb8b85499078eaeef9f891b264d63e78fe70c623bc5f8d36"
+    },
+    "metrics_summary": {
+      "path": "results/metrics/summary_main.csv",
+      "sha256": "4c29586bb83b7a1809bfd9999c3e1aaba36592bda5a6f0c3e525e715ae624f0e"
+    },
+    "query_mapping_history": {
+      "path": "results/training/query_mapping_history_main.csv",
+      "sha256": "4d805c106cdd62edbc5fae4264d1469aeabe7f0db1d549ff3dd5d3454cedb3c5"
+    },
+    "query_mapping_summary": {
+      "path": "results/training/query_mapping_summary_main.json",
+      "sha256": "3edd1ff4e26d4b10df04a6062c8ae4c838f3baa770ffbbcc0cf9c9c37143e965"
+    },
+    "query_selection": {
+      "path": "results/query_selection.csv",
+      "sha256": "4a40a4bbc11d2e4dc7eeaa95704cd3a5a7a7d1732cb22330154c38ad4f23d58a"
+    },
+    "scanvi_history": {
+      "path": "results/training/scanvi_history_main.csv",
+      "sha256": "755e937424f87c56380ae5616f101a2a8a2c22e75f11f46512fde37aa4b5ad00"
+    },
+    "scanvi_predictions": {
+      "path": "results/predictions/scanvi_predictions_main.csv",
+      "sha256": "f86efa17243128f0e2e4a3f5d1d5a94add68f8cf353fe06c588882b75d2a3eeb"
+    },
+    "scanvi_scores": {
+      "path": "results/predictions/scanvi_scores_main.csv",
+      "sha256": "2c348c762e1d6357e28e176a86e97ce088fa789edc91c6187f56a3d9407a835c"
+    },
+    "scanvi_summary": {
+      "path": "results/training/scanvi_summary_main.json",
+      "sha256": "0d974024c9c9d36e1d44be3a4195ce12d5faac9eb85843d02400188140f8b468"
+    },
+    "scvi_history": {
+      "path": "results/training/scvi_history_main.csv",
+      "sha256": "b774bf67bf61e5ba723143ac3d761d7480933a314c9a68aa88a71925406c6e95"
+    },
+    "scvi_summary": {
+      "path": "results/training/scvi_summary_main.json",
+      "sha256": "ec8b49f9ea7d2978ee20e05a37b1c81dea66fb6d5f7ca0de9e742189fb01e384"
+    },
+    "sealed_labels": {
+      "path": "data/splits/query_eval_labels_main.csv",
+      "sha256": "0854433dd44155132256b08b90e94395dcf24856d0a82d638e880f34992a859d"
+    },
+    "split_manifest": {
+      "path": "data/splits/split_manifest_main.json",
+      "sha256": "4ac1df2b3ba5ffbe944e88d7ac68d17f4cd46031125278b90d63e1b59207f1f3"
+    }
+  },
+  "generation_git_commit": null,
+  "note": "All listed artifacts were generated before git was initialised in this repository; generation_git_commit is therefore null. The verification_snapshot block records the code state at manifest (re)generation time, not at artifact generation time.",
+  "schema": "artifact_manifest_v2",
+  "verification_snapshot": {
+    "generated_at_utc": "2026-09-21T15:23:34.516908+00:00",
+    "git_branch": "main",
+    "git_commit": "227e6ffdbddb96971cdb03fead822801465a8c0b",
+    "git_dirty": true,
+    "git_remote": "https://github.com/SyzenShen/heart-atlas-reference-mapping.git"
+  }
+}

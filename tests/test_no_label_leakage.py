@@ -15,6 +15,9 @@ from heartmap.split import (LeakageError, assert_no_overlap,
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 TRAIN_SCRIPTS = ["run_baseline.py", "train_reference.py", "map_query.py"]
+# Scripts on the evaluation side: they run strictly after predictions are
+# frozen and are the only ones allowed to open the sealed labels.
+EVAL_SCRIPTS = ["evaluate.py", "verify_outputs.py"]
 
 
 def test_query_has_no_true_or_fine_labels(synthetic_atlas, synthetic_config):
@@ -90,6 +93,28 @@ def test_training_scripts_use_load_model_split():
         assert "load_model_split" in imported_names, (
             f"{name} must import load_model_split, not load_split"
         )
+
+
+def test_only_evaluation_side_scripts_import_sealed_label_loaders():
+    """Parse AST: among all scripts, ONLY the evaluation-side scripts
+    (evaluate.py and verify_outputs.py, which recompute metrics from sealed
+    labels after freezing) may import load_evaluation_labels / load_split."""
+    for path in sorted(SCRIPTS.glob("*.py")):
+        tree = ast.parse(path.read_text())
+        imported_names: set[str] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom):
+                imported_names.update(a.name for a in node.names)
+        sealed_loaders = imported_names & {"load_evaluation_labels", "load_split"}
+        if path.name in EVAL_SCRIPTS:
+            assert "load_evaluation_labels" in sealed_loaders, (
+                f"{path.name} must use load_evaluation_labels"
+            )
+        else:
+            assert not sealed_loaders, (
+                f"{path.name} must not import sealed-label loaders "
+                f"({sorted(sealed_loaders)})"
+            )
 
 
 def test_load_model_split_does_not_read_sealed_labels(

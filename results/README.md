@@ -11,7 +11,13 @@ two are never mixed (`verify_outputs.py` enforces this).
 - `query_selection.csv` — donor ranking (label-blind `largest_donor_by_cells`
   rule; composition described for documentation only).
 - `run_metadata_<tag>.json` — per-run provenance (versions, device, seed,
-  timestamps, git info).
+  timestamps; generation-time git fields are null — see
+  `docs/provenance.md`).
+- `artifact_manifest_<tag>.json` — SHA-256 of all tracked artifacts (config,
+  HVG list, split manifest, sealed labels, predictions, scores, metrics,
+  training histories/summaries, figure manifest) plus a verification-snapshot
+  git commit; `generation_git_commit` is always null. Regenerate with
+  `scripts/write_artifact_manifest.py`.
 - `reference_scanvi_latent_<tag>.h5ad`, `query_mapped_<tag>.h5ad` — latent
   representations for joint UMAPs (git-ignored).
 

@@ -23,6 +23,7 @@ from heartmap.config import load_config  # noqa: E402
 from heartmap.metrics import evaluate_method  # noqa: E402
 from heartmap.models import METHOD_NAME as SCANVI_METHOD  # noqa: E402
 from heartmap.provenance import collect_environment, read_json, write_json  # noqa: E402
+from heartmap.split import load_evaluation_labels  # noqa: E402
 
 PREDICTION_FILES = {
     BASELINE_METHOD: "baseline_predictions",
@@ -39,8 +40,9 @@ def main() -> None:
     mdir = cfg.results_dir / "metrics"
     mdir.mkdir(parents=True, exist_ok=True)
 
-    # The single permitted read of sealed ground truth.
-    sealed = pd.read_csv(cfg.sealed_labels_path)
+    # The single permitted read of sealed ground truth, via the sanctioned
+    # loader (schema-validated; model-facing scripts never call this).
+    sealed = load_evaluation_labels(cfg)
     print(f"Opened sealed labels for evaluation: {len(sealed)} cells")
     manifest = read_json(cfg.split_manifest_path)
     reference_labels = manifest["reference_label_set"]

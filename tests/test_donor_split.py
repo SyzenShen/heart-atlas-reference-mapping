@@ -33,6 +33,34 @@ def test_donor_cell_counts_is_label_blind(synthetic_atlas, synthetic_config):
     assert counts.iloc[0]["donor_id"] == "A"
 
 
+def test_selection_works_without_cell_type_column(
+    synthetic_atlas, synthetic_config
+):
+    """Label-blindness: delete the entire cell_type column and selection
+    must still pick the same donor."""
+    atlas_no_labels = synthetic_atlas.copy()
+    del atlas_no_labels.obs["cell_type"]
+    assert "cell_type" not in atlas_no_labels.obs.columns
+
+    donor, stats = select_query_donor(atlas_no_labels, synthetic_config)
+    assert donor == "A"  # same donor as with labels present
+    assert list(stats.columns) == [
+        "donor_id", "n_cells", "n_cell_types", "cell_type_composition",
+    ]
+    assert (stats["cell_type_composition"] == "").all()
+    assert (stats["n_cell_types"] == 0).all()
+    assert stats["n_cells"].sum() == synthetic_atlas.n_obs
+
+
+def test_selection_invariant_to_label_values(synthetic_atlas, synthetic_config):
+    """Scrambling every label must not change the donor-cell counts."""
+    counts_before = donor_cell_counts(synthetic_atlas, synthetic_config)
+    scrambled = synthetic_atlas.copy()
+    scrambled.obs["cell_type"] = "X"
+    counts_after = donor_cell_counts(scrambled, synthetic_config)
+    pd.testing.assert_frame_equal(counts_before, counts_after)
+
+
 def test_make_split_isolates_donor_and_cells(synthetic_atlas, synthetic_config):
     ref, query, sealed, manifest, stats, ref_full = make_split(
         synthetic_atlas, synthetic_config

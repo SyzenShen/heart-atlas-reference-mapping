@@ -9,10 +9,10 @@
     "cuda_available": false,
     "cuda_version": null,
     "git": {
-      "branch": "main",
-      "commit": "026469c9453411fe2cac3ef4a837e588cad7d508",
-      "dirty": true,
-      "remote": "https://github.com/SyzenShen/heart-atlas-reference-mapping.git"
+      "branch": null,
+      "commit": null,
+      "dirty": null,
+      "remote": null
     },
     "gpus": [],
     "lightning": "2.6.6",
@@ -32,6 +32,7 @@
     "torch": "2.2.2"
   },
   "experiment_name": "heart_donor_holdout",
+  "git_provenance_note": "Git was not initialised when this run was generated, so all generation-time git fields are null and are never back-filled. The code state at verification time is recorded separately in results/artifact_manifest_main.json (verification_snapshot).",
   "hvg_file": "hvg_main.txt",
   "labels_key": "labels_scanvi",
   "method": "scanvi_scarches",
@@ -64,10 +65,10 @@
       },
       "environment": {
         "git": {
-          "branch": "main",
-          "commit": "026469c9453411fe2cac3ef4a837e588cad7d508",
-          "dirty": true,
-          "remote": "https://github.com/SyzenShen/heart-atlas-reference-mapping.git"
+          "branch": null,
+          "commit": null,
+          "dirty": null,
+          "remote": null
         },
         "lightning": "2.6.6",
         "python": "3.10.11",

@@ -110,5 +110,5 @@ explicitly excluded from scientific claims.
 
 Re-running a step overwrites same-tag artifacts. Never re-run
 `prepare_split.py` with altered selection criteria after looking at results;
-the rule is pre-registered. Do not tune any YAML parameter against query
-accuracy.
+the selection rule must stay fixed independently of model performance. Do not
+tune any YAML parameter against query accuracy.

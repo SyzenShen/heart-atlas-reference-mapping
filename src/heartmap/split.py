@@ -1,15 +1,21 @@
 """Deterministic donor-held-out split and query-label sealing.
 
-The query donor is chosen by a pre-registered, deterministic, label-blind
-rule (``largest_donor_by_cells``): the donor with the most cells wins, ties
-broken by lexicographically smallest donor ID. Selection never inspects
-``cell_type``. Composition statistics are computed *after* selection for
-description only.
+The query donor is chosen by a deterministic, label-blind rule
+(``largest_donor_by_cells``): the donor with the most cells wins, ties
+broken by lexicographically smallest donor ID. Selection reads ONLY the
+donor column — ``cell_type`` is never inspected. Composition statistics are
+computed *after* selection for description only.
+
+Rule revision note: the rule was simplified from an earlier
+``largest_eligible_donor`` draft (cell count + composition eligibility)
+after repository review. The revision did not change the selected donor
+(D6), the reference/query cell-ID sets, or their SHA-256 hashes.
 
 Sealing design
 --------------
 * ``query_eval_labels_<tag>.csv`` -- only ``cell_id`` + ``true_cell_type``;
-  read by the evaluation stage alone.
+  opened exclusively through :func:`load_evaluation_labels` by the
+  evaluation stage.
 * The model-facing query AnnData has the author annotation column removed and
   ``labels_scanvi`` set to the single ``Unknown`` category for every cell.
 * The split manifest records stable hashes of both cell-id sets.
@@ -17,9 +23,11 @@ Sealing design
 Loader design
 -------------
 * ``load_model_split`` -- returns (reference, query, manifest) only; used by
-  every training/mapping/figure script.
-* ``load_split`` -- additionally reads the sealed CSV; used **only** by
-  ``scripts/evaluate.py`` and by tests that explicitly verify sealing.
+  every training/mapping/figure script. Never touches the sealed CSV.
+* ``load_evaluation_labels`` -- the ONLY sanctioned way to open the sealed
+  CSV; reserved for ``scripts/evaluate.py``, the output verifier and tests.
+* ``load_split`` -- convenience wrapper returning the model split plus the
+  sealed labels; used **only** by evaluation-side code and tests.
 """
 
 from __future__ import annotations
@@ -47,23 +55,24 @@ PREDICTION_FREEZE_NOTE = (
 # Query donor selection (label-blind)
 # --------------------------------------------------------------------------
 def donor_cell_counts(adata, cfg: Config) -> pd.DataFrame:
-    """Cell counts per donor. Uses only the donor key — no label column."""
+    """Cell counts per donor — strictly label-blind.
+
+    Reads ONLY the ``donor_key`` column. ``cell_type`` is never accessed, so
+    no label-based exclusion happens here: the dataset loader already removed
+    doublet/NotAssigned nuisance clusters before selection, and
+    :func:`make_split` applies ``exclude_labels`` after selection when
+    building the split objects.
+    """
     donor_key = cfg["donor_key"]
-    exclude = set(cfg.get("exclude_labels", []))
-    label_key = cfg["cell_type_key"]
-
-    obs = adata.obs.copy()
-    obs = obs[obs[donor_key].notna()]
-    if exclude and label_key in obs.columns:
-        obs = obs[~obs[label_key].astype(str).isin(exclude)]
-
+    series = adata.obs[donor_key]
     counts = (
-        obs.groupby(donor_key, observed=True)
-        .size()
+        series[series.notna()]
+        .astype(str)
+        .value_counts()
+        .rename_axis("donor_id")
         .reset_index(name="n_cells")
     )
-    counts["donor_id"] = counts[donor_key].astype(str)
-    counts = counts[["donor_id", "n_cells"]].sort_values(
+    counts = counts.sort_values(
         ["n_cells", "donor_id"], ascending=[False, True]
     ).reset_index(drop=True)
     return counts
@@ -73,32 +82,37 @@ def donor_statistics(adata, cfg: Config) -> pd.DataFrame:
     """Full composition table for description (computed *after* selection).
 
     Includes cell-type counts per donor. The selection rule itself never
-    touches the ``cell_type`` column — this table exists solely so the manifest
-    can document what the chosen donor looks like.
+    touches the ``cell_type`` column — this table exists solely so the
+    manifest can document what each donor looks like. Tolerates a missing
+    ``cell_type`` column (yields empty composition), so it can always be
+    called after the label-blind selection.
     """
     donor_key = cfg["donor_key"]
     label_key = cfg["cell_type_key"]
     exclude = set(cfg.get("exclude_labels", []))
+    has_labels = label_key in adata.obs.columns
 
-    df = adata.obs[[donor_key, label_key]].copy()
-    df[label_key] = df[label_key].astype(str)
-    df = df[~df[label_key].isin(exclude)]
+    cols = [donor_key] + ([label_key] if has_labels else [])
+    df = adata.obs[cols].copy()
+    if has_labels:
+        df[label_key] = df[label_key].astype(str)
+        if exclude:
+            df = df[~df[label_key].isin(exclude)]
     df = df[df[donor_key].notna()]
 
     rows = []
     for donor, g in df.groupby(donor_key, observed=True):
-        counts = g[label_key].value_counts()
-        n_cells = int(len(g))
-        rows.append(
-            {
-                "donor_id": str(donor),
-                "n_cells": n_cells,
-                "n_cell_types": int(g[label_key].nunique()),
-                "cell_type_composition": ";".join(
-                    f"{t}:{c}" for t, c in counts.items()
-                ),
-            }
-        )
+        row = {"donor_id": str(donor), "n_cells": int(len(g))}
+        if has_labels:
+            counts = g[label_key].value_counts()
+            row["n_cell_types"] = int(g[label_key].nunique())
+            row["cell_type_composition"] = ";".join(
+                f"{t}:{c}" for t, c in counts.items()
+            )
+        else:
+            row["n_cell_types"] = 0
+            row["cell_type_composition"] = ""
+        rows.append(row)
     stats = pd.DataFrame(rows).sort_values(
         ["n_cells", "donor_id"], ascending=[False, True]
     ).reset_index(drop=True)
@@ -108,8 +122,9 @@ def donor_statistics(adata, cfg: Config) -> pd.DataFrame:
 def select_query_donor(adata, cfg: Config) -> tuple[str, pd.DataFrame]:
     """Label-blind rule: largest cell count, tie-break by donor ID.
 
-    Returns ``(donor_id, composition_stats)``. Composition stats are computed
-    for description only and are **not** used by the selection.
+    Works even when the ``cell_type`` column is absent. Returns
+    ``(donor_id, composition_stats)``. Composition stats are computed for
+    description only and are **not** used by the selection.
     """
     counts = donor_cell_counts(adata, cfg)
     if counts.empty:
@@ -242,6 +257,11 @@ def make_split(adata, cfg: Config, audit_info: dict[str, Any] | None = None):
                 "Selection uses only the donor_key column; cell_type is never "
                 "read during selection. Composition is described afterward."
             ),
+            "rule_revision_note": (
+                "Simplified from the earlier 'largest_eligible_donor' draft "
+                "after repository review; the revision did not change the "
+                "selected donor, the split cell-ID sets, or their hashes."
+            ),
         },
         "reference_donor_ids": sorted(
             reference.obs[donor_key].astype(str).unique().tolist()
@@ -275,13 +295,13 @@ def load_model_split(cfg: Config):
 def load_split(cfg: Config):
     """Read a frozen split **including sealed labels**.
 
-    Reserved for ``scripts/evaluate.py`` and for tests that explicitly verify
+    Reserved for evaluation-side code and tests that explicitly verify
     sealing. Training/mapping/figure scripts must use ``load_model_split``
     instead.
     """
     reference = ad.read_h5ad(cfg.reference_path)
     query = ad.read_h5ad(cfg.query_model_input_path)
-    sealed = pd.read_csv(cfg.sealed_labels_path)
+    sealed = load_evaluation_labels(cfg)
     manifest = read_json(cfg.split_manifest_path)
     return reference, query, sealed, manifest
 
@@ -331,7 +351,14 @@ def assert_query_sealed(query, cfg: Config) -> None:
         )
 
 
-def assert_sealed_labels_match(query, cfg: Config) -> pd.DataFrame:
+def load_evaluation_labels(cfg: Config) -> pd.DataFrame:
+    """Open the sealed query labels — the ONLY sanctioned read path.
+
+    Validates the schema (exact columns, unique cell IDs). Reserved for
+    ``scripts/evaluate.py``, the output verifier, and tests. Training,
+    mapping, and figure scripts must never call this; they use
+    :func:`load_model_split`, which never touches the sealed file.
+    """
     sealed = pd.read_csv(cfg.sealed_labels_path)
     if list(sealed.columns) != SEALED_COLUMNS:
         raise LeakageError(
@@ -340,6 +367,13 @@ def assert_sealed_labels_match(query, cfg: Config) -> pd.DataFrame:
         )
     if sealed["cell_id"].duplicated().any():
         raise LeakageError("Duplicate cell_id in sealed labels")
+    return sealed
+
+
+def assert_sealed_labels_match(query, cfg: Config) -> pd.DataFrame:
+    """Load sealed labels via :func:`load_evaluation_labels` and assert that
+    their cell IDs exactly match the model-facing query object."""
+    sealed = load_evaluation_labels(cfg)
     if set(sealed["cell_id"]) != set(query.obs_names):
         raise LeakageError("Sealed label cell IDs do not match query cell IDs")
     return sealed

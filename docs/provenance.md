@@ -43,7 +43,7 @@ a fine-grained label leak.
   `layer="counts"` to `SCVI.setup_anndata`.
 - See `results/data_audit.json` and `docs/DATA_DICTIONARY.md`.
 
-## Query-donor selection (pre-registered, deterministic, label-blind)
+## Query-donor selection (deterministic, label-blind)
 
 Rule name: `largest_donor_by_cells` (see `results/query_selection.csv`).
 
@@ -56,6 +56,12 @@ label-blind. Cell-type composition is computed *after* selection for
 description only. **D6** is the largest donor (3,009 cells, 11 cell types) and
 was therefore fixed as the single query donor before any model was trained.
 Reference = the other 13 donors, **15,632 cells**.
+
+> Revision note: the rule was originally specified as `largest_eligible_donor`
+> (cell count + composition eligibility thresholds) and was simplified to the
+> label-blind cell-count rule after repository review. The revision did not
+> change the selected donor (D6), the reference/query cell-ID sets, or their
+> SHA-256 hashes.
 
 ## Software versions
 
@@ -125,6 +131,16 @@ weights frozen).
 
 ## Git provenance
 
-`git` is not initialised until the final phase. Run metadata records
-branch/commit/remote once a repository exists. No commit is made without
-explicit user authorisation.
+The pipeline results were generated **before git was initialised** in this
+repository. Consequently every generation-time git field in
+`results/run_metadata_main.json` (`environment.git`,
+`stages.query_mapping.environment.git`) is null and is never back-filled.
+
+Code-state verification happens afterwards and is recorded separately:
+`results/artifact_manifest_main.json` carries a `verification_snapshot` block
+(git commit, branch, dirty flag, remote) taken when the manifest was
+(re)generated, alongside SHA-256 hashes binding the config, HVG list, split
+manifest, sealed labels, predictions, scores, metrics, training
+histories/summaries and figure manifest to that snapshot. Its
+`generation_git_commit` field is always null by construction. No commit is
+made without explicit user authorisation.

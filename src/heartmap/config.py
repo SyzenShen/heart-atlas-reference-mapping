@@ -128,7 +128,8 @@ class Config:
             raise ConfigError("n_hvg must be positive")
         if self.raw["query_selection_rule"] != "largest_donor_by_cells":
             raise ConfigError(
-                "Only the pre-registered 'largest_donor_by_cells' rule is allowed"
+                "Only the deterministic label-blind 'largest_donor_by_cells' "
+                "rule is allowed"
             )
         thresholds = list(self.raw["confidence_thresholds"])
         if 0.0 not in [float(t) for t in thresholds]:
