@@ -5,8 +5,8 @@ type: software
 version: 0.1.0
 date-released: 2026-09-21
 license: MIT
-repository-code: "https://github.com/USERNAME/heart-atlas-reference-mapping"
-url: "https://github.com/USERNAME/heart-atlas-reference-mapping"
+repository-code: "https://github.com/SyzenShen/heart-atlas-reference-mapping"
+url: "https://github.com/SyzenShen/heart-atlas-reference-mapping"
 abstract: >-
   A reproducible donor-held-out reference-mapping case study on the 20k-cell
   subsampled Human Heart Cell Atlas shipped with scvi-tools. One complete donor
