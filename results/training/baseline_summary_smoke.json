@@ -1,0 +1,60 @@
+{
+  "densification": "HVG matrix densified to float32 before sklearn PCA (15632x2000 ~= 0.125 GB); no reference/query joint processing",
+  "environment": {
+    "git": {
+      "branch": null,
+      "commit": null,
+      "dirty": null,
+      "remote": null
+    },
+    "numpy": "1.26.4",
+    "python": "3.10.11",
+    "scanpy": "1.11.5",
+    "scvi": "1.3.3",
+    "sklearn": "1.7.2"
+  },
+  "knn_fit_seconds": 0.006,
+  "knn_k": 5,
+  "knn_metric": "euclidean",
+  "knn_weights": "distance",
+  "labels_used_for_fit": "labels_scanvi",
+  "method": "pca_knn",
+  "n_hvg": 200,
+  "normalization": "normalize_total(target_sum) + log1p, per dataset",
+  "pca_explained_variance_ratio": [
+    0.1944361925125122,
+    0.07080172002315521,
+    0.03913004696369171,
+    0.03288720175623894,
+    0.024675756692886353,
+    0.02198668196797371,
+    0.01669238694012165,
+    0.016098948195576668,
+    0.014423667453229427,
+    0.013408781960606575
+  ],
+  "pca_n_components_fitted": 10,
+  "pca_total_explained_variance": 0.44454139471054077,
+  "predictions_file": "baseline_predictions_smoke.csv",
+  "preprocess_fit_seconds": 4.128,
+  "query_cell_count": 300,
+  "query_donor": "D6",
+  "query_true_labels_read": false,
+  "reference_cell_count": 600,
+  "reference_label_classes": [
+    "Adipocytes",
+    "Atrial_Cardiomyocyte",
+    "Endothelial",
+    "Fibroblast",
+    "Lymphoid",
+    "Mesothelial",
+    "Myeloid",
+    "Neuronal",
+    "Pericytes",
+    "Smooth_muscle_cells",
+    "Ventricular_Cardiomyocyte"
+  ],
+  "run_tag": "smoke",
+  "target_sum": 10000.0,
+  "wallclock_seconds": 4.134
+}

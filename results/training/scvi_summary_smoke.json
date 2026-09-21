@@ -1,0 +1,38 @@
+{
+  "device": {
+    "accelerator": "cpu",
+    "devices": 1
+  },
+  "history": {
+    "columns": [
+      "validation_loss",
+      "elbo_validation",
+      "reconstruction_loss_validation",
+      "kl_local_validation",
+      "kl_global_validation",
+      "train_loss_epoch",
+      "elbo_train",
+      "reconstruction_loss_train",
+      "kl_local_train",
+      "kl_global_train",
+      "kl_weight",
+      "train_loss_step"
+    ],
+    "n_epochs_recorded": 2
+  },
+  "is_trained": true,
+  "n_params_total": 35190,
+  "n_params_trainable": 35190,
+  "run_tag": "smoke",
+  "stage": "scvi_reference",
+  "train_kwargs": {
+    "accelerator": "cpu",
+    "batch_size": 128,
+    "check_val_every_n_epoch": 1,
+    "devices": 1,
+    "early_stopping": false,
+    "max_epochs": 2,
+    "train_size": 0.9
+  },
+  "wallclock_seconds": 0.24
+}

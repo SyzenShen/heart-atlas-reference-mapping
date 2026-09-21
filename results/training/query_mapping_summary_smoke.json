@@ -1,0 +1,52 @@
+{
+  "device": {
+    "accelerator": "cpu",
+    "devices": 1
+  },
+  "environment": {
+    "git": {
+      "branch": null,
+      "commit": null,
+      "dirty": null,
+      "remote": null
+    },
+    "lightning": "2.6.6",
+    "python": "3.10.11",
+    "scvi": "1.3.3",
+    "torch": "2.2.2"
+  },
+  "history": {
+    "columns": [
+      "validation_loss",
+      "elbo_validation",
+      "reconstruction_loss_validation",
+      "kl_local_validation",
+      "kl_global_validation",
+      "train_loss_epoch",
+      "elbo_train",
+      "reconstruction_loss_train",
+      "kl_local_train",
+      "kl_global_train"
+    ],
+    "n_epochs_recorded": 2
+  },
+  "is_trained": true,
+  "params": {
+    "n_params_total": 38740,
+    "n_params_trainable": 14978
+  },
+  "query_donor": "D6",
+  "run_tag": "smoke",
+  "stage": "scanvi_query_mapping",
+  "train_kwargs": {
+    "accelerator": "cpu",
+    "check_val_every_n_epoch": 1,
+    "devices": 1,
+    "early_stopping": false,
+    "max_epochs": 2,
+    "plan_kwargs": {
+      "weight_decay": 0.0
+    }
+  },
+  "wallclock_seconds": 0.21
+}

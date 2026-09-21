@@ -1,0 +1,107 @@
+# ============================================================================
+# Main experiment configuration: donor-held-out reference mapping, HHCA 20k.
+# Values follow the current scvi-tools reference-mapping tutorial
+# (docs.scvi-tools.org, "Reference mapping with SCVI-Tools", checked 2026-09-21,
+# tutorial executed with scvi-tools 1.5.0; this repo runs 1.3.3 on Py 3.10).
+# Once a main evaluation starts these parameters MUST NOT be tuned against the
+# held-out query donor's labels.
+# ============================================================================
+
+experiment_name: heart_donor_holdout
+run_tag: main
+seed: 42
+dataset: heart_cell_atlas_subsampled
+dataset_loader: scvi.data.heart_cell_atlas_subsampled
+# remove_nuisance_clusters=True is the loader default; doublets/NotAssigned are
+# dropped by the loader itself before we ever touch the data.
+remove_nuisance_clusters: true
+data_save_path: data/raw
+
+# ---- Keys: FINAL values are written by scripts/audit_data.py after data audit
+# into results/data_audit.json. These are the audited defaults for HHCA 20k.
+donor_key: donor            # 14 donors: D1-D7, D11, H2-H7 (audited 2026-09-21)
+batch_key: donor            # donor is the held-out biological unit; 'sample'
+                            # (145 within-donor samples) would leak the donor
+cell_type_key: cell_type    # 11 author-provided broad types (cell_states, 65
+                            # fine states, is out of scope / future work)
+counts_layer: counts        # audit proved adata.X holds raw integer UMI counts;
+                            # preparation copies X -> layers['counts']
+unlabeled_category: Unknown
+
+# ---- Feature selection (reference-only) ----
+n_hvg: 2000
+hvg_flavor: seurat_v3     # count-based HVG flavor; run on raw counts, reference
+
+# ---- Query donor selection (deterministic, pre-registered rule) ----
+query_selection_rule: largest_eligible_donor
+minimum_query_cells: 500
+minimum_query_cell_types: 5
+# tie-break: lexicographically smallest donor ID
+exclude_labels: ["doublets", "NotAssigned"]
+
+# ---- Device resolution ----
+# auto -> cuda if torch.cuda.is_available() else cpu. MPS is never selected
+# automatically: scvi-tools/PyTorch Lightning do not reliably support Apple MPS.
+accelerator: auto
+devices: 1
+
+# ---- PCA + kNN baseline ----
+baseline:
+  method: pca_knn
+  n_components: 30
+  n_neighbors: 15
+  weights: distance          # distance-weighted neighbor vote
+  metric: euclidean
+  target_sum: 10000.0
+
+# ---- scVI reference ----
+# scArches-recommended architecture from the official tutorial.
+scvi:
+  n_latent: 30
+  n_hidden: 128
+  n_layers: 2
+  dropout_rate: 0.2
+  use_layer_norm: both
+  use_batch_norm: none
+  encode_covariates: true
+  gene_likelihood: zinb
+  # scvi-tools default for <=~20k cells is up to 400 epochs; early stopping on
+  # held-out reference validation cells prevents pointless epochs.
+  max_epochs: 400
+  early_stopping: true
+  early_stopping_patience: 20
+  check_val_every_n_epoch: 5
+  train_size: 0.9
+  batch_size: 256
+
+# ---- scANVI reference (initialized from the trained scVI model) ----
+scanvi:
+  # Official tutorial: scanvi_ref.train(max_epochs=20, n_samples_per_label=100)
+  max_epochs: 20
+  n_samples_per_label: 100
+  early_stopping: true
+  early_stopping_patience: 10
+  check_val_every_n_epoch: 5
+
+# ---- scArches query update ----
+query_mapping:
+  # Official tutorial: scanvi_query.train(max_epochs=100,
+  # plan_kwargs={"weight_decay": 0.0}, check_val_every_n_epoch=10)
+  max_epochs: 100
+  weight_decay: 0.0
+  early_stopping: true
+  early_stopping_patience: 10
+  check_val_every_n_epoch: 10
+
+# ---- Confidence-aware abstention sweep ----
+confidence_thresholds: [0.0, 0.5, 0.6, 0.7, 0.8, 0.9]
+# A class must have at least this many query cells to enter the pre-registered
+# "evaluable classes" macro-F1; the all-class macro-F1 is ALWAYS reported too.
+evaluable_class_min_support: 20
+
+# ---- UMAP / plotting ----
+umap:
+  n_neighbors: 15
+  min_dist: 0.3
+  seed: 42
+figure_dpi: 200

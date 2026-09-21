@@ -1,0 +1,45 @@
+{
+  "device": {
+    "accelerator": "cpu",
+    "devices": 1
+  },
+  "history": {
+    "columns": [
+      "validation_loss",
+      "elbo_validation",
+      "reconstruction_loss_validation",
+      "kl_local_validation",
+      "kl_global_validation",
+      "validation_classification_loss",
+      "validation_accuracy",
+      "validation_f1_score",
+      "validation_calibration_error",
+      "train_loss_epoch",
+      "elbo_train",
+      "reconstruction_loss_train",
+      "kl_local_train",
+      "kl_global_train",
+      "train_classification_loss",
+      "train_accuracy",
+      "train_f1_score",
+      "train_calibration_error",
+      "train_loss_step"
+    ],
+    "n_epochs_recorded": 2
+  },
+  "is_trained": true,
+  "n_label_classes": 12,
+  "n_params_total": 38644,
+  "n_params_trainable": 38633,
+  "run_tag": "smoke",
+  "stage": "scanvi_reference",
+  "train_kwargs": {
+    "accelerator": "cpu",
+    "check_val_every_n_epoch": 1,
+    "devices": 1,
+    "early_stopping": false,
+    "max_epochs": 2,
+    "n_samples_per_label": 20
+  },
+  "wallclock_seconds": 0.35
+}

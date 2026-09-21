@@ -1,0 +1,25 @@
+# Conda environment for heart-atlas-reference-mapping.
+# scvi-tools 1.3.x is the last line supporting Python 3.10; scvi-tools >=1.4
+# requires Python >=3.12. This file pins the tested local configuration.
+# For exact transitive versions see requirements-lock.txt.
+name: heartmap
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip>=23
+  - numpy>=1.24,<2.0
+  - scipy
+  - pandas
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - h5py
+  - pip:
+      - scvi-tools==1.3.3
+      - scanpy>=1.11,<1.12
+      - pyyaml
+      - pytest
+      - nbformat
+      - ipykernel
+      - jupyter

@@ -1,0 +1,39 @@
+{
+  "device": {
+    "accelerator": "cpu",
+    "devices": 1
+  },
+  "history": {
+    "columns": [
+      "kl_weight",
+      "train_loss_step",
+      "validation_loss",
+      "elbo_validation",
+      "reconstruction_loss_validation",
+      "kl_local_validation",
+      "kl_global_validation",
+      "train_loss_epoch",
+      "elbo_train",
+      "reconstruction_loss_train",
+      "kl_local_train",
+      "kl_global_train"
+    ],
+    "n_epochs_recorded": 316
+  },
+  "is_trained": true,
+  "n_params_total": 1341566,
+  "n_params_trainable": 1341566,
+  "run_tag": "main",
+  "stage": "scvi_reference",
+  "train_kwargs": {
+    "accelerator": "cpu",
+    "batch_size": 256,
+    "check_val_every_n_epoch": 5,
+    "devices": 1,
+    "early_stopping": true,
+    "early_stopping_patience": 20,
+    "max_epochs": 400,
+    "train_size": 0.9
+  },
+  "wallclock_seconds": 1197.47
+}

@@ -1,0 +1,196 @@
+{
+  "batch_key": "donor",
+  "cell_type_key": "cell_type",
+  "config_file": "smoke.yaml",
+  "counts_layer": "counts",
+  "donor_key": "donor",
+  "environment": {
+    "anndata": "0.11.4",
+    "cuda_available": false,
+    "cuda_version": null,
+    "git": {
+      "branch": null,
+      "commit": null,
+      "dirty": null,
+      "remote": null
+    },
+    "gpus": [],
+    "lightning": "2.6.6",
+    "machine": "x86_64",
+    "macos": "15.6",
+    "mps_available": true,
+    "numpy": "1.26.4",
+    "pandas": "2.3.3",
+    "platform": "macOS-15.6-x86_64-i386-64bit",
+    "processor": "i386",
+    "python": "3.10.11",
+    "scanpy": "1.11.5",
+    "scipy": "1.15.3",
+    "scvi": "1.3.3",
+    "sklearn": "1.7.2",
+    "timestamp_utc": "2026-09-20T17:56:21.374946+00:00",
+    "torch": "2.2.2"
+  },
+  "experiment_name": "heart_donor_holdout",
+  "hvg_file": "hvg_smoke.txt",
+  "labels_key": "labels_scanvi",
+  "method": "scanvi_scarches",
+  "n_hvg": 200,
+  "n_query_cells_sealed": 300,
+  "n_reference_cells": 600,
+  "query_donor": "D6",
+  "reference_donor_ids": [
+    "D1",
+    "D11",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D7",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "H6",
+    "H7"
+  ],
+  "run_tag": "smoke",
+  "seed": 0,
+  "stages": {
+    "query_mapping": {
+      "device": {
+        "accelerator": "cpu",
+        "devices": 1
+      },
+      "environment": {
+        "git": {
+          "branch": null,
+          "commit": null,
+          "dirty": null,
+          "remote": null
+        },
+        "lightning": "2.6.6",
+        "python": "3.10.11",
+        "scvi": "1.3.3",
+        "torch": "2.2.2"
+      },
+      "history": {
+        "columns": [
+          "validation_loss",
+          "elbo_validation",
+          "reconstruction_loss_validation",
+          "kl_local_validation",
+          "kl_global_validation",
+          "train_loss_epoch",
+          "elbo_train",
+          "reconstruction_loss_train",
+          "kl_local_train",
+          "kl_global_train"
+        ],
+        "n_epochs_recorded": 2
+      },
+      "is_trained": true,
+      "params": {
+        "n_params_total": 38740,
+        "n_params_trainable": 14978
+      },
+      "query_donor": "D6",
+      "run_tag": "smoke",
+      "stage": "scanvi_query_mapping",
+      "train_kwargs": {
+        "accelerator": "cpu",
+        "check_val_every_n_epoch": 1,
+        "devices": 1,
+        "early_stopping": false,
+        "max_epochs": 2,
+        "plan_kwargs": {
+          "weight_decay": 0.0
+        }
+      },
+      "wallclock_seconds": 0.21
+    },
+    "scanvi": {
+      "device": {
+        "accelerator": "cpu",
+        "devices": 1
+      },
+      "history": {
+        "columns": [
+          "validation_loss",
+          "elbo_validation",
+          "reconstruction_loss_validation",
+          "kl_local_validation",
+          "kl_global_validation",
+          "validation_classification_loss",
+          "validation_accuracy",
+          "validation_f1_score",
+          "validation_calibration_error",
+          "train_loss_epoch",
+          "elbo_train",
+          "reconstruction_loss_train",
+          "kl_local_train",
+          "kl_global_train",
+          "train_classification_loss",
+          "train_accuracy",
+          "train_f1_score",
+          "train_calibration_error",
+          "train_loss_step"
+        ],
+        "n_epochs_recorded": 2
+      },
+      "is_trained": true,
+      "n_label_classes": 12,
+      "n_params_total": 38644,
+      "n_params_trainable": 38633,
+      "run_tag": "smoke",
+      "stage": "scanvi_reference",
+      "train_kwargs": {
+        "accelerator": "cpu",
+        "check_val_every_n_epoch": 1,
+        "devices": 1,
+        "early_stopping": false,
+        "max_epochs": 2,
+        "n_samples_per_label": 20
+      },
+      "wallclock_seconds": 0.35
+    },
+    "scvi": {
+      "device": {
+        "accelerator": "cpu",
+        "devices": 1
+      },
+      "history": {
+        "columns": [
+          "validation_loss",
+          "elbo_validation",
+          "reconstruction_loss_validation",
+          "kl_local_validation",
+          "kl_global_validation",
+          "train_loss_epoch",
+          "elbo_train",
+          "reconstruction_loss_train",
+          "kl_local_train",
+          "kl_global_train",
+          "kl_weight",
+          "train_loss_step"
+        ],
+        "n_epochs_recorded": 2
+      },
+      "is_trained": true,
+      "n_params_total": 35190,
+      "n_params_trainable": 35190,
+      "run_tag": "smoke",
+      "stage": "scvi_reference",
+      "train_kwargs": {
+        "accelerator": "cpu",
+        "batch_size": 128,
+        "check_val_every_n_epoch": 1,
+        "devices": 1,
+        "early_stopping": false,
+        "max_epochs": 2,
+        "train_size": 0.9
+      },
+      "wallclock_seconds": 0.24
+    }
+  }
+}

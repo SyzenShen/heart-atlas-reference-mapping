@@ -1,0 +1,19 @@
+# Top-level, loosely pinned dependencies.
+# For the fully resolved, tested set see requirements-lock.txt.
+scvi-tools==1.3.3
+scanpy>=1.11,<1.12
+scikit-misc>=0.5
+numpy>=1.24,<2.0
+scipy
+pandas
+scikit-learn
+matplotlib
+seaborn
+igraph
+leidenalg
+h5py
+pyyaml
+pytest
+nbformat
+ipykernel
+jupyter

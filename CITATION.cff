@@ -1,0 +1,65 @@
+cff-version: 1.2.0
+message: "If you use this workflow repository, please cite it together with the underlying methods and dataset papers."
+title: "Donor-held-out reference mapping of the Human Heart Cell Atlas with scVI, scANVI, and scArches"
+type: software
+version: 0.1.0
+date-released: 2026-09-21
+license: MIT
+repository-code: "https://github.com/USERNAME/heart-atlas-reference-mapping"
+url: "https://github.com/USERNAME/heart-atlas-reference-mapping"
+abstract: >-
+  A reproducible donor-held-out reference-mapping case study on the 20k-cell
+  subsampled Human Heart Cell Atlas shipped with scvi-tools. One complete donor
+  is held out as an unseen query, scVI/scANVI are trained on the remaining
+  donors, and scArches query mapping is used to transfer labels. Query labels
+  are sealed until predictions are frozen. A PCA + kNN baseline and a
+  confidence-coverage analysis are included. This is an educational adaptation
+  of published workflows, not a reproduction of the scArches paper and not a
+  new biological study.
+keywords:
+  - single-cell
+  - scRNA-seq
+  - reference mapping
+  - scArches
+  - scVI
+  - scANVI
+  - human heart cell atlas
+  - label transfer
+authors:
+  - name: "heart-atlas-reference-mapping contributors"
+preferred-citation:
+  type: software
+  title: "Donor-held-out reference mapping of the Human Heart Cell Atlas with scVI, scANVI, and scArches"
+  authors:
+    - name: "heart-atlas-reference-mapping contributors"
+references:
+  - type: article
+    title: "Mapping single-cell data to reference atlases by transfer learning"
+    authors:
+      - name: "Mohammad Lotfollahi"
+      - name: "Mohsen Naghipourfar"
+      - name: "Matin Amoozadeh"
+      - et al.
+    year: 2022
+    doi: 10.1038/s41587-021-01001-7
+  - type: article
+    title: "Probabilistic harmonization and annotation of single-cell transcriptomics data with deep generative models"
+    authors:
+      - name: "Chenling Xu"
+      - et al.
+    year: 2022
+    doi: 10.15252/msb.20209620
+  - type: article
+    title: "Deep generative modeling for single-cell transcriptomics"
+    authors:
+      - name: "Romain Lopez"
+      - et al.
+    year: 2018
+    doi: 10.1038/s41592-018-0229-2
+  - type: article
+    title: "Cells of the adult human heart (Human Heart Cell Atlas)"
+    authors:
+      - name: "Monika Litviňuková"
+      - et al.
+    year: 2020
+    doi: 10.1038/s41586-020-2797-4

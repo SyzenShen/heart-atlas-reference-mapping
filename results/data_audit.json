@@ -1,0 +1,445 @@
+{
+  "X": {
+    "density": 0.04643748187824935,
+    "dtype": "float32",
+    "is_sparse": true,
+    "looks_like_integer_counts": true,
+    "max": 7468.0,
+    "min": 1.0,
+    "n_negative": 0,
+    "n_nonzero": 23079723,
+    "sampled_fraction_non_integer": 0.0,
+    "sampled_max_round_deviation": 0.0,
+    "sampled_n": 50000,
+    "shape": [
+      18641,
+      26662
+    ],
+    "sparse_format": "csr",
+    "type": "csr_matrix"
+  },
+  "candidate_batch_columns": [
+    "donor",
+    "sample"
+  ],
+  "candidate_donor_columns": [
+    "donor",
+    "sample"
+  ],
+  "candidate_label_columns": [
+    "cell_type",
+    "cell_states"
+  ],
+  "categorical_columns": {
+    "NRP": {
+      "n_unique": 2,
+      "values": {
+        "No": 10681,
+        "Yes": 7960
+      }
+    },
+    "Used": {
+      "n_unique": 1,
+      "values": {
+        "Yes": 18641
+      }
+    },
+    "age_group": {
+      "n_unique": 7,
+      "values": {
+        "40-45": 1027,
+        "45-50": 1192,
+        "50-55": 4112,
+        "55-60": 2045,
+        "60-65": 4951,
+        "65-70": 4170,
+        "70-75": 1144
+      }
+    },
+    "cell_source": {
+      "n_unique": 4,
+      "values": {
+        "Harvard-Nuclei": 6796,
+        "Sanger-CD45": 3155,
+        "Sanger-Cells": 1753,
+        "Sanger-Nuclei": 6937
+      }
+    },
+    "cell_states": {
+      "n_unique": 65,
+      "values": {
+        "Adip1": 93,
+        "Adip2": 41,
+        "Adip3": 6,
+        "Adip4": 5,
+        "B_cells": 57,
+        "CD14+Mo": 84,
+        "CD16+Mo": 128,
+        "CD4+T_cytox": 109,
+        "CD4+T_tem": 41,
+        "CD8+T_cytox": 101,
+        "CD8+T_tem": 125,
+        "DC": 31,
+        "DOCK4+M\u00d81": 123,
+        "DOCK4+M\u00d82": 73,
+        "EC10_CMC-like": 116,
+        "EC1_cap": 1121,
+        "EC2_cap": 571,
+        "EC3_cap": 699,
+        "EC4_immune": 221,
+        "EC5_art": 839,
+        "EC6_ven": 337,
+        "EC7_atria": 162,
+        "EC8_ln": 21,
+        "EC9_FB-like": 22,
+        "FB1": 1125,
+        "FB2": 533,
+        "FB3": 304,
+        "FB4": 237,
+        "FB5": 119,
+        "FB6": 74,
+        "FB7": 54,
+        "IL17RA+Mo": 3,
+        "LYVE1+M\u00d81": 133,
+        "LYVE1+M\u00d82": 83,
+        "LYVE1+M\u00d83": 71,
+        "Mast": 76,
+        "Meso": 17,
+        "Mo_pi": 65,
+        "M\u00d8_AgP": 57,
+        "M\u00d8_mod": 56,
+        "NC1": 110,
+        "NC2": 23,
+        "NC3": 10,
+        "NC4": 5,
+        "NC5": 3,
+        "NC6": 2,
+        "NK": 133,
+        "NKT": 56,
+        "N\u00d8": 5,
+        "PC1_vent": 1999,
+        "PC2_atria": 508,
+        "PC3_str": 593,
+        "PC4_CMC-like": 104,
+        "SMC1_basic": 507,
+        "SMC2_art": 134,
+        "aCM1": 572,
+        "aCM2": 206,
+        "aCM3": 165,
+        "aCM4": 61,
+        "aCM5": 5,
+        "vCM1": 2993,
+        "vCM2": 1095,
+        "vCM3": 878,
+        "vCM4": 309,
+        "vCM5": 32
+      }
+    },
+    "cell_type": {
+      "n_unique": 11,
+      "values": {
+        "Adipocytes": 145,
+        "Atrial_Cardiomyocyte": 1009,
+        "Endothelial": 4109,
+        "Fibroblast": 2446,
+        "Lymphoid": 653,
+        "Mesothelial": 17,
+        "Myeloid": 957,
+        "Neuronal": 153,
+        "Pericytes": 3204,
+        "Smooth_muscle_cells": 641,
+        "Ventricular_Cardiomyocyte": 5307
+      }
+    },
+    "donor": {
+      "n_unique": 14,
+      "values": {
+        "D1": 581,
+        "D11": 1851,
+        "D2": 1714,
+        "D3": 999,
+        "D4": 1144,
+        "D5": 1161,
+        "D6": 3009,
+        "D7": 1386,
+        "H2": 837,
+        "H3": 1180,
+        "H4": 1046,
+        "H5": 1514,
+        "H6": 1027,
+        "H7": 1192
+      }
+    },
+    "gender": {
+      "n_unique": 2,
+      "values": {
+        "Female": 8470,
+        "Male": 10171
+      }
+    },
+    "n_counts": {
+      "n_unique": 6226
+    },
+    "n_genes": {
+      "n_unique": 2981
+    },
+    "percent_mito": {
+      "n_unique": 12898
+    },
+    "percent_ribo": {
+      "n_unique": 12998
+    },
+    "region": {
+      "n_unique": 6,
+      "values": {
+        "AX": 3783,
+        "LA": 2880,
+        "LV": 4053,
+        "RA": 1589,
+        "RV": 3195,
+        "SP": 3141
+      }
+    },
+    "sample": {
+      "n_unique": 145
+    },
+    "scrublet_score": {
+      "n_unique": 79,
+      "values": {
+        "0.003601440576230492": 1,
+        "0.004914004914004914": 5,
+        "0.005593536357986327": 3,
+        "0.006289308176100629": 4,
+        "0.007001909611712286": 2,
+        "0.007731958762886598": 3,
+        "0.008480104370515329": 7,
+        "0.009247027741083224": 3,
+        "0.010033444816053512": 9,
+        "0.01084010840108401": 9,
+        "0.011667810569663692": 11,
+        "0.012517385257301807": 14,
+        "0.013389711064129669": 18,
+        "0.014285714285714285": 14,
+        "0.015206372194062274": 19,
+        "0.016152716593245228": 11,
+        "0.01712583767684289": 30,
+        "0.01812688821752266": 28,
+        "0.019157088122605363": 38,
+        "0.02021772939346812": 44,
+        "0.021310181531176007": 42,
+        "0.02165196471531676": 1,
+        "0.022435897435897436": 70,
+        "0.023596419853539462": 57,
+        "0.024793388429752067": 61,
+        "0.026028547439126783": 47,
+        "0.027303754266211604": 79,
+        "0.028620988725065046": 80,
+        "0.029982363315696647": 81,
+        "0.03139013452914798": 114,
+        "0.032846715328467155": 103,
+        "0.034354688950789226": 139,
+        "0.035916824196597356": 133,
+        "0.03753609239653513": 166,
+        "0.0392156862745098": 146,
+        "0.04095904095904096": 193,
+        "0.04276985743380855": 193,
+        "0.0446521287642783": 214,
+        "0.046610169491525424": 265,
+        "0.04864864864864865": 259,
+        "0.05077262693156733": 281,
+        "0.05298759864712514": 290,
+        "0.055299539170506916": 322,
+        "0.05771495877502945": 361,
+        "0.060240963855421686": 337,
+        "0.06288532675709001": 383,
+        "0.06565656565656566": 409,
+        "0.0685640362225097": 429,
+        "0.07161803713527852": 418,
+        "0.07356948228882834": 1,
+        "0.07482993197278912": 490,
+        "0.0782122905027933": 437,
+        "0.08177905308464849": 517,
+        "0.0855457227138643": 509,
+        "0.08952959028831563": 528,
+        "0.09375": 560,
+        "0.0967741935483871": 1,
+        "0.09822866344605476": 586,
+        "0.10299003322259136": 596,
+        "0.10806174957118353": 592,
+        "0.11347517730496454": 598,
+        "0.11926605504587157": 598,
+        "0.12380952380952381": 2,
+        "0.12547528517110265": 614,
+        "0.13043478260869565": 1,
+        "0.13214990138067062": 579,
+        "0.13934426229508196": 654,
+        "0.14712153518123666": 583,
+        "0.15367483296213807": 1,
+        "0.15555555555555556": 547,
+        "0.16473317865429235": 578,
+        "0.17475728155339806": 480,
+        "0.18575063613231552": 530,
+        "0.19786096256684493": 463,
+        "0.2112676056338028": 426,
+        "0.2261904761904762": 413,
+        "0.24290220820189273": 358,
+        "0.26174496644295303": 237,
+        "0.2831541218637993": 216
+      }
+    },
+    "source": {
+      "n_unique": 3,
+      "values": {
+        "CD45+": 3155,
+        "Cells": 1753,
+        "Nuclei": 13733
+      }
+    },
+    "type": {
+      "n_unique": 2,
+      "values": {
+        "DBD": 8376,
+        "DCD": 10265
+      }
+    },
+    "version": {
+      "n_unique": 2,
+      "values": {
+        "V2": 9212,
+        "V3": 9429
+      }
+    }
+  },
+  "configured_keys": {
+    "batch_key": {
+      "key": "donor",
+      "n_missing": 0,
+      "n_unique": 14
+    },
+    "cell_type_key": {
+      "key": "cell_type",
+      "n_missing": 0,
+      "n_unique": 11
+    },
+    "counts_layer": {
+      "key": "counts",
+      "present": true
+    },
+    "donor_key": {
+      "key": "donor",
+      "n_missing": 0,
+      "n_unique": 14
+    }
+  },
+  "counts_validation_X": {
+    "density": 0.04643748187824935,
+    "dtype": "float32",
+    "is_sparse": true,
+    "location": "X",
+    "looks_like_integer_counts": true,
+    "max": 7468.0,
+    "min": 1.0,
+    "n_negative": 0,
+    "n_nonzero": 23079723,
+    "sampled_fraction_non_integer": 0.0,
+    "sampled_max_round_deviation": 0.0,
+    "sampled_n": 50000,
+    "shape": [
+      18641,
+      26662
+    ],
+    "sparse_format": "csr",
+    "type": "csr_matrix"
+  },
+  "counts_validation_configured": {
+    "density": 0.04643748187824935,
+    "dtype": "float32",
+    "is_sparse": true,
+    "location": "layers['counts']",
+    "looks_like_integer_counts": true,
+    "max": 7468.0,
+    "min": 1.0,
+    "n_negative": 0,
+    "n_nonzero": 23079723,
+    "sampled_fraction_non_integer": 0.0,
+    "sampled_max_round_deviation": 0.0,
+    "sampled_n": 50000,
+    "shape": [
+      18641,
+      26662
+    ],
+    "sparse_format": "csr",
+    "type": "csr_matrix"
+  },
+  "dataset": {
+    "file_sha256": "4a54acfa72faf108473f8c2705894eea2194b45a2b5e21b7630bdd32eaf1e808",
+    "loader": "scvi.data.heart_cell_atlas_subsampled",
+    "local_file": "data/raw/hca_subsampled_20k.h5ad",
+    "remove_nuisance_clusters": true,
+    "source_url": "https://github.com/YosefLab/scVI-data/blob/master/hca_subsampled_20k.h5ad?raw=true"
+  },
+  "environment": {
+    "anndata": "0.11.4",
+    "lightning": "2.6.6",
+    "numpy": "1.26.4",
+    "python": "3.10.11",
+    "scanpy": "1.11.5",
+    "scvi": "1.3.3",
+    "torch": "2.2.2"
+  },
+  "layers": {},
+  "layers_after_materialisation": {
+    "counts": {
+      "dtype": "float32",
+      "looks_like_integer_counts": true,
+      "n_nonzero": 23079723,
+      "type": "csr_matrix"
+    }
+  },
+  "n_obs": 18641,
+  "n_vars": 26662,
+  "nuisance_check": {
+    "clean": true,
+    "nuisance_labels_present": []
+  },
+  "obs_columns": [
+    "NRP",
+    "age_group",
+    "cell_source",
+    "cell_type",
+    "donor",
+    "gender",
+    "n_counts",
+    "n_genes",
+    "percent_mito",
+    "percent_ribo",
+    "region",
+    "sample",
+    "scrublet_score",
+    "source",
+    "type",
+    "version",
+    "cell_states",
+    "Used"
+  ],
+  "obs_missing_total": 0,
+  "obs_names_unique": true,
+  "obsm": {},
+  "raw_present": false,
+  "uns_keys": [
+    "cell_type_colors"
+  ],
+  "var_columns": [
+    "gene_ids-Harvard-Nuclei",
+    "feature_types-Harvard-Nuclei",
+    "gene_ids-Sanger-Nuclei",
+    "feature_types-Sanger-Nuclei",
+    "gene_ids-Sanger-Cells",
+    "feature_types-Sanger-Cells",
+    "gene_ids-Sanger-CD45",
+    "feature_types-Sanger-CD45",
+    "n_counts"
+  ],
+  "var_names_unique": true,
+  "varm": {}
+}

@@ -1,0 +1,109 @@
+{
+  "derived_from": [
+    "summary_main.csv",
+    "per_class_main.csv",
+    "confidence_coverage_main.csv",
+    "joined_eval_scanvi_scarches_main.csv"
+  ],
+  "figure_dir": "figures",
+  "figures": [
+    {
+      "file": "confidence_by_cell_type.png",
+      "sha256": "e0e39913cfbe70d52ea6bc0466ec07769516f7b9548ca29e7d4df667d1213b3a"
+    },
+    {
+      "file": "confidence_correct_vs_incorrect.png",
+      "sha256": "2eb9500bfdb4fa95ad0123befaca3b99a92cf4044dec9586ffdbe51bbe276908"
+    },
+    {
+      "file": "confusion_baseline_all_counts.png",
+      "sha256": "9328129b2a57aebce8731714893fe420d251284111ede291675cabe9e4750dfe"
+    },
+    {
+      "file": "confusion_baseline_all_normalized.png",
+      "sha256": "c45bb9e24b1cdb1babad6866fc3584b6e2ad5841f2bf9bd16b68aec778e465d7"
+    },
+    {
+      "file": "confusion_baseline_closed_set_counts.png",
+      "sha256": "3d170b6666dab3b67c67ed66b1c79325a74bab88a7cf21e43080491dcf171142"
+    },
+    {
+      "file": "confusion_baseline_closed_set_normalized.png",
+      "sha256": "87e08bac89083439d41d3489b795a3c916391f1d4ced70f431419ff9a5b075e0"
+    },
+    {
+      "file": "confusion_scanvi_all_counts.png",
+      "sha256": "2c0aab97a07888321d33350ee1256b7bc98f127267d45de7c184732f485f3554"
+    },
+    {
+      "file": "confusion_scanvi_all_normalized.png",
+      "sha256": "26bfd7eb688b592415237764ebce32c8eea8986650f3a86ce700948474548ac2"
+    },
+    {
+      "file": "confusion_scanvi_closed_set_counts.png",
+      "sha256": "a44dce6a531bf3dafb6c66d8c88985faf60ab469b6ca1bf435e996f0b07074be"
+    },
+    {
+      "file": "confusion_scanvi_closed_set_normalized.png",
+      "sha256": "520c9c55994b3d177992cb0ee70ef638fdfa6322c304db5337b2f77ae0a1973b"
+    },
+    {
+      "file": "confusion_scanvi_normalized.png",
+      "sha256": "520c9c55994b3d177992cb0ee70ef638fdfa6322c304db5337b2f77ae0a1973b"
+    },
+    {
+      "file": "coverage_accuracy.png",
+      "sha256": "ef5aa6a275474ddf513e9ab874c9e775cbe59e2274de2644e2bf67623c543704"
+    },
+    {
+      "file": "coverage_accuracy_pca_knn.png",
+      "sha256": "cbcdf1fd03ff3db841cd3146d2b9b2c13b67fc4a1e35e34a14539eb4f3ed8580"
+    },
+    {
+      "file": "coverage_accuracy_scanvi_scarches.png",
+      "sha256": "ef5aa6a275474ddf513e9ab874c9e775cbe59e2274de2644e2bf67623c543704"
+    },
+    {
+      "file": "coverage_macro_f1.png",
+      "sha256": "c155cd4d67e0059b7e652a2533ad763296220731cfca09eb20cbab07013e7f1f"
+    },
+    {
+      "file": "coverage_macro_f1_pca_knn.png",
+      "sha256": "51b137e0c8f215ddf98f936ed77cbb986b06623a1341f467a2409bab15e19f7b"
+    },
+    {
+      "file": "coverage_macro_f1_scanvi_scarches.png",
+      "sha256": "c155cd4d67e0059b7e652a2533ad763296220731cfca09eb20cbab07013e7f1f"
+    },
+    {
+      "file": "f1_vs_cell_abundance.png",
+      "sha256": "0ad43d265b9518256aa910f0098ef1a6daa6ef0e20e8e1cdb481cc060a5f640f"
+    },
+    {
+      "file": "method_comparison.png",
+      "sha256": "e5838323dfd5a16c87074b4871f73a7c45fc782319e9bcdd759e3884bcd4aa98"
+    },
+    {
+      "file": "umap_raw_by_donor.png",
+      "sha256": "bdfc21f45e3665b0f2597cf61c5cedf682c7401ca65b23a8f2a57e1e414d980b"
+    },
+    {
+      "file": "umap_scanvi_by_cell_type.png",
+      "sha256": "5674abc8fa9763166504da5c50f2c931a6660f8c6f57e996f0c925a07bf76003"
+    },
+    {
+      "file": "umap_scanvi_by_donor.png",
+      "sha256": "8a3518492f3d960f6f433cdbc674e1929f83e5d7762489483a449a7420864b3a"
+    },
+    {
+      "file": "umap_scanvi_by_split.png",
+      "sha256": "745e713cd19918d388a34751cd2f6841aca02e811b976a6b281e60b9240a0478"
+    },
+    {
+      "file": "umap_scanvi_query_predictions.png",
+      "sha256": "52bc3d9434ca17cceec5945f4990733263c36a8f1df17517ed2fbb03c16c62ae"
+    }
+  ],
+  "note": "UMAPs are visual aids only; quantitative claims use metrics.",
+  "run_tag": "main"
+}

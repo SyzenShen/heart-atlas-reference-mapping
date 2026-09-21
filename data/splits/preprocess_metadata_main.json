@@ -1,0 +1,22 @@
+{
+  "counts_layer": "counts",
+  "hvg_batch_key": "donor",
+  "hvg_flavor": "seurat_v3",
+  "hvg_selected_on": "reference_only",
+  "n_hvg": 2000,
+  "query_labels_sealed": true,
+  "reference_label_set": [
+    "Adipocytes",
+    "Atrial_Cardiomyocyte",
+    "Endothelial",
+    "Fibroblast",
+    "Lymphoid",
+    "Mesothelial",
+    "Myeloid",
+    "Neuronal",
+    "Pericytes",
+    "Smooth_muscle_cells",
+    "Ventricular_Cardiomyocyte"
+  ],
+  "sealed_labels_n": 3009
+}

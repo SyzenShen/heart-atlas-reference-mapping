@@ -1,0 +1,12 @@
+true_label,Adipocytes,Atrial_Cardiomyocyte,Endothelial,Fibroblast,Lymphoid,Mesothelial,Myeloid,Neuronal,Pericytes,Smooth_muscle_cells,Ventricular_Cardiomyocyte
+Adipocytes,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0
+Atrial_Cardiomyocyte,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0
+Endothelial,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0
+Fibroblast,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.25,0.75
+Lymphoid,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0
+Mesothelial,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0
+Myeloid,0.0,0.0,0.0,0.0,0.0,0.10526315789473684,0.0,0.0,0.0,0.0,0.8947368421052632
+Neuronal,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0
+Pericytes,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0
+Smooth_muscle_cells,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0
+Ventricular_Cardiomyocyte,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0

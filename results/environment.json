@@ -1,0 +1,47 @@
+{
+  "timestamp_utc": "2026-09-20T17:29:29.989323+00:00",
+  "python": "3.10.11",
+  "platform": "macOS-15.6-x86_64-i386-64bit",
+  "machine": "x86_64",
+  "processor": "i386",
+  "macos": "15.6",
+  "torch": "2.2.2",
+  "cuda_available": false,
+  "cuda_version": null,
+  "gpus": [],
+  "mps_available": true,
+  "numpy": "1.26.4",
+  "scipy": "1.15.3",
+  "pandas": "2.3.3",
+  "sklearn": "1.7.2",
+  "anndata": "0.11.4",
+  "scanpy": "1.11.5",
+  "scvi": "1.3.3",
+  "lightning": "2.6.6",
+  "git": {
+    "commit": null,
+    "branch": null,
+    "dirty": null,
+    "remote": null
+  },
+  "cpu_brand": "Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz",
+  "cpu_count_logical": 12,
+  "memory_total_bytes": 34359738368,
+  "disk_total_bytes": 402000945152,
+  "disk_free_bytes": 15724744704,
+  "conda": null,
+  "mamba": null,
+  "git_path": "/usr/bin/git",
+  "python_executable": "/Users/shenyz/projects/github/heart-atlas-reference-mapping/.venv/bin/python",
+  "git_status": {
+    "is_repo": false,
+    "commit": null,
+    "uncommitted": []
+  },
+  "network": {
+    "scvi_docs": "unreachable: URLError",
+    "pypi": "unreachable: URLError",
+    "github": "unreachable: URLError",
+    "heart_data": "unreachable: URLError"
+  }
+}

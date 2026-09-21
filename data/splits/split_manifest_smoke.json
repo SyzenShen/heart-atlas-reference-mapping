@@ -1,0 +1,60 @@
+{
+  "batch_key": "donor",
+  "cell_type_key": "cell_type",
+  "counts_layer": "counts",
+  "dataset": "heart_cell_atlas_subsampled",
+  "dataset_fingerprint": {
+    "n_obs": 18641,
+    "n_vars": 26662,
+    "obs_names_sha256": "097343b54630d8e0ad8c8df6e58056aa36788429d03f7768f25b738a77381d95",
+    "var_names_sha256": "0b6b43ec56bbaa431828c1c0e441e08999efb8eea4c7741903c721eeee2cc133"
+  },
+  "donor_key": "donor",
+  "label_sealing_note": "Query labels were sealed before model training and are read only by scripts/evaluate.py after predictions are frozen.",
+  "labels_key": "labels_scanvi",
+  "n_query_cells": 300,
+  "n_reference_cells": 600,
+  "query_cell_ids_sha256": "4e252751a6c264b0babee4bed65bf866ebdeae73c6967b682c179240709d37e5",
+  "query_donor": "D6",
+  "reference_cell_ids_sha256": "11c9da62f1e81292a172af1a5d9593e84ab3338fe5baa395de550c57db12dc3a",
+  "reference_donor_ids": [
+    "D1",
+    "D11",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D7",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "H6",
+    "H7"
+  ],
+  "reference_label_set": [
+    "Adipocytes",
+    "Atrial_Cardiomyocyte",
+    "Endothelial",
+    "Fibroblast",
+    "Lymphoid",
+    "Mesothelial",
+    "Myeloid",
+    "Neuronal",
+    "Pericytes",
+    "Smooth_muscle_cells",
+    "Ventricular_Cardiomyocyte"
+  ],
+  "run_tag": "smoke",
+  "sealed_labels_file": "query_eval_labels_smoke.csv",
+  "seed": 0,
+  "selection_rule": "largest_eligible_donor",
+  "selection_rule_detail": {
+    "major_type_min_cells": 10,
+    "major_type_min_fraction": 0.01,
+    "minimum_query_cell_types": 3,
+    "minimum_query_cells": 50,
+    "tie_break": "lexicographically smallest donor ID"
+  },
+  "unlabeled_category": "Unknown"
+}
