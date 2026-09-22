@@ -10,7 +10,7 @@
     "var_names_sha256": "0b6b43ec56bbaa431828c1c0e441e08999efb8eea4c7741903c721eeee2cc133"
   },
   "donor_key": "donor",
-  "label_sealing_note": "Query labels were sealed before model training and are read only by scripts/evaluate.py after predictions are frozen.",
+  "label_sealing_note": "Query labels were sealed before model training. Model-facing stages cannot access sealed labels; evaluation-side verification reads them after prediction freeze.",
   "labels_key": "labels_scanvi",
   "n_query_cells": 300,
   "n_reference_cells": 600,

@@ -46,8 +46,9 @@ from .provenance import (dataset_fingerprint, read_json, stable_hash_strings,
 
 SEALED_COLUMNS = ["cell_id", "true_cell_type"]
 PREDICTION_FREEZE_NOTE = (
-    "Query labels were sealed before model training and are read only by "
-    "scripts/evaluate.py after predictions are frozen."
+    "Query labels were sealed before model training. Model-facing stages "
+    "cannot access sealed labels; evaluation-side verification reads them "
+    "after prediction freeze."
 )
 
 

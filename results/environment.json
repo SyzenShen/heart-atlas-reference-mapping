@@ -32,7 +32,7 @@
   "conda": null,
   "mamba": null,
   "git_path": "/usr/bin/git",
-  "python_executable": "/Users/shenyz/projects/github/heart-atlas-reference-mapping/.venv/bin/python",
+  "python_executable": ".venv/bin/python",
   "git_status": {
     "is_repo": false,
     "commit": null,

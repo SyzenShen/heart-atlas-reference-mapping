@@ -225,7 +225,7 @@ src/heartmap/   library: data, split, baseline, models, metrics,
 scripts/        9 CLI stages (audit → split → baseline → train → map →
                 evaluate → figures → verify)
 notebooks/      00–04 walkthrough notebooks + heart_mapping_colab.ipynb
-tests/          38 CPU tests incl. leakage guards and a synthetic end-to-end run
+tests/          44 CPU tests incl. leakage guards and a synthetic end-to-end run
 data/           raw (ignored), processed h5ad (ignored), splits + sealed labels
 models/         scvi/scanvi reference and query weights (ignored)
 results/        predictions, metrics, training summaries, audits

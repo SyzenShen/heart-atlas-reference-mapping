@@ -479,9 +479,11 @@ def main() -> int:
     if cfg.is_smoke:
         rep.warn("SMOKE artifacts verified; these never count as a main run.")
 
-    # README status consistency (lightweight textual guard).
+    # README status consistency (lightweight textual guard). Only meaningful
+    # for the published tier: the README claims that the *published* results
+    # are verified; missing local-only artifacts do not contradict it.
     readme = PROJECT_ROOT / "README.md"
-    if readme.exists():
+    if not require_local and readme.exists():
         txt = readme.read_text()
         if "MAIN_RESULTS_VERIFIED" in txt and rep.errors:
             rep.warn(

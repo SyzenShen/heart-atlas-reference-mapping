@@ -36,6 +36,27 @@ def _which(name: str) -> str | None:
     return shutil.which(name)
 
 
+def _anonymize_path(path: str | None) -> str | None:
+    """Make an executable path portable: relative to the repo root when
+    possible, otherwise with the home directory replaced by '~'. Prevents
+    personal absolute paths from leaking into tracked audit artifacts."""
+    if not path:
+        return path
+    p = Path(path).resolve()
+    root = Path(__file__).resolve().parents[1]
+    try:
+        return str(p.relative_to(root))
+    except ValueError:
+        pass
+    home = Path.home()
+    if p == home:
+        return "~"
+    try:
+        return "~/" + str(p.relative_to(home))
+    except ValueError:
+        return str(p)
+
+
 def _git_status(repo: Path) -> dict:
     def run(args):
         try:
@@ -67,10 +88,10 @@ def collect() -> dict:
             "memory_total_bytes": int(mem_bytes) if mem_bytes else None,
             "disk_total_bytes": disk.total,
             "disk_free_bytes": disk.free,
-            "conda": _which("conda"),
-            "mamba": _which("mamba"),
-            "git_path": _which("git"),
-            "python_executable": sys.executable,
+            "conda": _anonymize_path(_which("conda")),
+            "mamba": _anonymize_path(_which("mamba")),
+            "git_path": _anonymize_path(_which("git")),
+            "python_executable": _anonymize_path(sys.executable),
             "git_status": _git_status(Path.cwd()),
         }
     )

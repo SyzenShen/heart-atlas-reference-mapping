@@ -122,16 +122,16 @@
     },
     "split_manifest": {
       "path": "data/splits/split_manifest_main.json",
-      "sha256": "4ac1df2b3ba5ffbe944e88d7ac68d17f4cd46031125278b90d63e1b59207f1f3"
+      "sha256": "fa0ae6e54e30f88cbbe1e9feafc6b2e47778b26b51caf09541c77a65c1cc7e89"
     }
   },
   "generation_git_commit": null,
   "note": "All listed artifacts were generated before git was initialised in this repository; generation_git_commit is therefore null. The verification_snapshot block records the code state at manifest (re)generation time, not at artifact generation time.",
   "schema": "artifact_manifest_v2",
   "verification_snapshot": {
-    "generated_at_utc": "2026-09-21T15:23:34.516908+00:00",
+    "generated_at_utc": "2026-09-22T04:52:08.307670+00:00",
     "git_branch": "main",
-    "git_commit": "227e6ffdbddb96971cdb03fead822801465a8c0b",
+    "git_commit": "81f562b4d362ad4fbabcc7b52f6f57f59db2bc83",
     "git_dirty": true,
     "git_remote": "https://github.com/SyzenShen/heart-atlas-reference-mapping.git"
   }
